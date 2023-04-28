@@ -1,0 +1,2158 @@
+runtimeVersion: 0.4.1
+name: Personal Website Template
+description: ''
+type: com.dynaboard/project
+nodes:
+  ROOT_NODE:
+    type: ROOT_NODE
+    name: ROOT_NODE
+    slots:
+      components:
+        - nodeID: 9e2730fa-8aff-4461-a581-7f106b1f0714
+          orderKey: Zz
+        - nodeID: 484476ad-5f4e-4183-a8f2-04ba1dfccc66
+          orderKey: Zy
+        - nodeID: 8c60717e-5d56-415e-9bfb-f184ae931938
+          orderKey: Zx
+        - nodeID: f15ed1c8-b662-412b-a955-22de51c6db03
+          orderKey: Zw
+      config:
+        - nodeID: bd0e5ad4-74ff-4366-b4dd-098767afa5d6
+          orderKey: a0
+      pages:
+        - nodeID: 06dde8d1-28cb-4e27-bdcb-3cdee95dc1df
+          orderKey: Zz
+        - nodeID: 97c50cb7-8330-4b3a-a116-c9589ea24fb4
+          orderKey: a0
+        - nodeID: afcc2c83-f811-481d-baa7-3c07178cc6aa
+          orderKey: a4
+        - nodeID: b0d722ed-ee13-4ca2-a573-7cfd80a18aed
+          orderKey: a1V
+        - nodeID: 35409356-a37a-4e24-a43d-669b080bc6c6
+          orderKey: a5
+        - nodeID: c05f48de-b1e1-4850-b8b0-65b29b3e6d82
+          orderKey: a6
+        - nodeID: 3ebcd680-c7b1-4a49-9076-f0cc2bd42bd5
+          orderKey: Zy
+      resources:
+        - nodeID: cee57770-028b-405c-a743-7a0a1dfe0500
+          orderKey: a1
+        - nodeID: c6c218f0-82ff-45a8-9375-9611dbc3590b
+          orderKey: a2
+        - nodeID: a49123eb-2413-4c07-8249-687ac02c8786
+          orderKey: a4
+        - nodeID: 9fb5b18f-e398-470d-9a19-031425edbefc
+          orderKey: a5
+        - nodeID: 3e7bf6ee-f305-463f-b824-71aacd34d338
+          orderKey: a6
+        - nodeID: 41de9b9f-f60e-4899-9a27-d5e778411117
+          orderKey: a7
+      themes:
+        - nodeID: d6473a62-fbcd-4c51-9d55-f78b7eba13ce
+          orderKey: a0
+    properties:
+      previewPageRef: 06dde8d1-28cb-4e27-bdcb-3cdee95dc1df
+      showDynaboardBranding: false
+      signInAuthorizationRules: |-
+        [
+          {
+            if: {
+              $and: [
+                {
+                  'session/user/email': {
+                    $in: [
+                      'example.com',
+                    ],
+                  },
+                },
+              ],
+            },
+            then: {
+              allow: true,
+            },
+          },
+        ]
+      selectedTheme: d6473a62-fbcd-4c51-9d55-f78b7eba13ce
+  04cb2e7d-986c-4cc6-b4d9-d4b7d98f1789:
+    type: FUNCTION
+    name: handleSave
+    properties:
+      action:
+        actionType: CALL_CLIENT_FUNCTION
+        code: |
+          const result = await savePost()
+
+          if (result) {
+            version.value = 'Draft'
+            draftToast()
+          }
+        targetNode:
+          ref: com.dynaboard.globals:tsclient
+  05d1eeb9-cf12-48f5-b40b-d3fc803899e8:
+    type: FUNCTION
+    name: navigateToPost
+    properties:
+      action:
+        actionType: NAVIGATE_TO_PAGE
+        path: '{{$app.baseURL}}/post/{{$currentPage.params.id}}'
+        target: _self
+        targetNode:
+          ref: com.dynaboard.globals:browser
+  060dbaf6-4e63-4d65-8cfc-903620d12d78:
+    type: FUNCTION
+    name: draftToast
+    properties:
+      action:
+        actionType: POP_TOAST
+        dismissButton: ''
+        duration: '5000'
+        message: Saved!
+        targetNode:
+          ref: com.dynaboard.globals:browser
+        variant: primary
+  06dde8d1-28cb-4e27-bdcb-3cdee95dc1df:
+    type: PAGE
+    name: index
+    slots:
+      canvas:
+        - nodeID: 4efe5317-e6be-40d1-a2a4-a675af354a79
+          orderKey: a1
+        - nodeID: 609d90fe-f13f-4fe5-ab67-f62dbbb46ebd
+          orderKey: a0G
+    properties:
+      layoutStyle: VERTICAL_STACK
+      spacing: '30'
+      title: About
+      headerComponent: COMPONENT/9e2730fa-8aff-4461-a581-7f106b1f0714
+  074c5e7f-ab35-4e5c-b137-23b989e7c32b:
+    type: FUNCTION
+    name: afterPublish
+    properties:
+      action:
+        actionType: CALL_SERVER_FUNCTION
+        code: |-
+          const id = {{$currentPage.params.id}}
+
+          await $kv.delete(id)
+        targetNode:
+          ref: cee57770-028b-405c-a743-7a0a1dfe0500
+      onSuccess:
+        function:
+          ref: 05d1eeb9-cf12-48f5-b40b-d3fc803899e8
+  07e86897-7afb-4a89-a7f5-15d0c9208b3d:
+    type: FUNCTION
+    name: deleteRow
+    properties:
+      action:
+        actionType: DELETE_RECORD
+        key: '{{dataTable1.selectedRow.key}}'
+        targetNode:
+          ref: 9fb5b18f-e398-470d-9a19-031425edbefc
+      onSuccess:
+        function:
+          ref: 58ce3ae3-3288-4791-ba60-09106962d403
+  11f135db-5cfd-4ea2-bbc9-4471b8d0a93e:
+    type: CONTAINER
+    name: container7
+    properties:
+      alignContent: center
+      backgroundColor: >-
+        {{version.value === 'Draft'? 'yellow.500': version.value === 'Published'
+        ? 'purple.500' : 'red.500'}}
+      boxShadow: '0'
+      clientX: 760.61376953125
+      clientY: 252.77716064453125
+      distributeContent: center
+      gridRows: '1'
+      height: 100%
+      layoutStyle: HORIZONTAL_STACK
+      left: NaN
+      padding: '0'
+      parentNodeID: 5a2c55be-6c76-4e24-a02c-bb1964f68820
+      top: NaN
+      width: fit
+  1449aa1a-c765-4742-b48c-ef3b94af9723:
+    type: FUNCTION
+    name: onLoad
+    properties:
+      action:
+        actionType: CALL_CLIENT_FUNCTION
+        code: |-
+          const postID = {{ $currentPage.params.id }}
+
+          const draftData = await loadDraft(postID)
+
+          if (draftData) {
+            version.value = "Draft"
+            titleInput.value = draftData.title
+            dateInput.value = draftData.date
+            bodyInput.value = draftData.body
+            return
+          }
+
+          const postData = await loadProd(postID)
+          if (postData) {
+            version.value = "Published"
+            titleInput.value = postData.title
+            dateInput.value = postData.date
+            bodyInput.value = postData.body
+            return
+          }
+
+          version.value = "New"
+        targetNode:
+          ref: com.dynaboard.globals:tsclient
+      runOnPageLoad: true
+  17429988-16e8-4326-b658-9abe8bb15160:
+    type: INLINE_REACT
+    name: react1
+    properties:
+      top: NaN
+      left: NaN
+      width: 40px
+      height: 40px
+      styles: |-
+        ::component {
+          svg {
+            width: 40px;
+            height: 40px;
+          }
+        }
+
+        ::wrapper {
+        }
+      componentSource: |-
+        return function SettingsIcon() {
+          return (
+            <svg viewBox="0 0 16 16" focusable="false" className="chakra-icon css-1hyqtbe">
+              <g fill="none" fill-rule="evenodd">
+                <path
+                  fill="currentColor"
+                  d="M10.8776 1.06432C10.7239 1.00063 10.5542 0.986069 10.3919 1.02264C10.2296 1.05921 10.0825 1.14511 9.971 1.26857L9.96956 1.27015L9.34083 1.96002L9.33972 1.96124C9.17071 2.14851 8.9643 2.29828 8.73382 2.40086C8.50284 2.50366 8.25283 2.55678 8.00001 2.55678C7.74718 2.55678 7.49718 2.50366 7.26619 2.40086C7.03545 2.29816 6.82884 2.14817 6.65972 1.96061L6.65919 1.96002L6.03414 1.2698C5.92255 1.14728 5.7756 1.06178 5.61387 1.0256C5.45199 0.989381 5.28288 1.004 5.12961 1.06744C4.97635 1.13089 4.84639 1.24009 4.75747 1.38013C4.66856 1.52015 4.62502 1.6842 4.63279 1.84989L4.67737 2.78211C4.69067 3.03445 4.65086 3.28677 4.56049 3.52276C4.46994 3.75922 4.33067 3.97398 4.15172 4.1531C3.97277 4.33222 3.75815 4.4717 3.52178 4.56248C3.28554 4.65321 3.03286 4.69325 2.78014 4.68002L1.8488 4.63279C1.68331 4.62501 1.5188 4.66843 1.3789 4.7572C1.23881 4.84608 1.1296 4.97605 1.06618 5.12935C1.00276 5.28265 0.988239 5.4518 1.02459 5.61367C1.06094 5.77553 1.1464 5.92223 1.26927 6.03369L1.96249 6.66298C2.14982 6.83229 2.30001 7.03939 2.40253 7.27015C2.50514 7.50109 2.55815 7.75098 2.55815 8.00369C2.55815 8.2564 2.50514 8.50629 2.40253 8.73723C2.29993 8.96817 2.15002 9.17501 1.96249 9.3444L1.26887 9.97072C1.14564 10.0823 1.05987 10.2293 1.02349 10.3916C0.987101 10.5538 1.00182 10.7233 1.06564 10.8769C1.12945 11.0304 1.23923 11.1604 1.3799 11.2491C1.52057 11.3378 1.68523 11.3807 1.85128 11.372L1.85202 11.372L2.78499 11.3247C3.03736 11.3117 3.28964 11.3518 3.52552 11.4425C3.76139 11.5332 3.97561 11.6724 4.15429 11.8511C4.33298 12.0298 4.47217 12.244 4.56284 12.4798C4.65352 12.7157 4.69366 12.968 4.68068 13.2204L4.63282 14.1509L4.63276 14.1522C4.62544 14.3174 4.66912 14.4808 4.75788 14.6204C4.84686 14.7603 4.97683 14.8693 5.13005 14.9327C5.28328 14.996 5.45231 15.0106 5.61411 14.9743C5.77576 14.9381 5.92232 14.853 6.03386 14.7305L6.6629 14.0376L6.66346 14.037C6.83268 13.8497 7.03928 13.7 7.26992 13.5975C7.50082 13.4949 7.75067 13.4419 8.00334 13.4419C8.25601 13.4419 8.50587 13.4949 8.73676 13.5975C8.96757 13.7001 9.1743 13.85 9.34359 14.0374L9.9688 14.7291L9.96977 14.7301C10.0814 14.8516 10.2276 14.936 10.3888 14.9717C10.5503 15.0075 10.719 14.9928 10.8719 14.9294C11.0248 14.866 11.1545 14.7571 11.2433 14.6175C11.3319 14.4783 11.3756 14.3152 11.3686 14.1503L11.3685 14.1489L11.3213 13.219C11.3084 12.9667 11.3485 12.7144 11.4392 12.4785C11.5298 12.2426 11.669 12.0284 11.8477 11.8497C12.0264 11.671 12.2406 11.5319 12.4765 11.4412C12.7124 11.3505 12.9647 11.3104 13.217 11.3233L14.15 11.3707C14.3162 11.3791 14.481 11.336 14.6217 11.2471C14.7623 11.1582 14.872 11.028 14.9357 10.8743C14.9994 10.7205 15.014 10.5509 14.9774 10.3886C14.9408 10.2263 14.855 10.0794 14.7317 9.96788L14.0371 9.34128C13.8496 9.17189 13.6994 8.96484 13.5968 8.7339C13.4942 8.50296 13.4412 8.25306 13.4412 8.00036C13.4412 7.74765 13.4942 7.49776 13.5968 7.26682C13.6994 7.03588 13.8493 6.82903 14.0369 6.65964L14.7314 6.03307C14.8548 5.92159 14.9406 5.77469 14.9772 5.6125C15.0138 5.45031 14.9994 5.28077 14.9358 5.12712C14.8723 4.97347 14.7628 4.84323 14.6223 4.75425C14.482 4.66532 14.3175 4.62195 14.1516 4.63007L13.2177 4.67743C12.9659 4.68972 12.7143 4.64913 12.4791 4.55827C12.2439 4.46741 12.0303 4.32829 11.8522 4.14987C11.674 3.97146 11.5352 3.75771 11.4447 3.52239C11.3542 3.28707 11.314 3.03539 11.3266 2.78358L11.374 1.85003C11.3824 1.68386 11.3393 1.51904 11.2504 1.37838C11.1615 1.23772 11.0313 1.12802 10.8776 1.06432ZM10.1721 0.0470894C10.5358 -0.0348502 10.916 -0.00222196 11.2604 0.140496C11.6048 0.283214 11.8966 0.529027 12.0958 0.844198C12.2949 1.15937 12.3917 1.52845 12.3727 1.90079L12.3254 2.8338C12.3197 2.94613 12.3377 3.0584 12.3781 3.16337C12.4184 3.26834 12.4803 3.3637 12.5598 3.44328C12.6393 3.52287 12.7346 3.58493 12.8395 3.62546C12.9443 3.66595 13.0564 3.68406 13.1686 3.67864L14.1021 3.6313C14.4742 3.61295 14.8428 3.71013 15.1575 3.90952C15.4722 4.1089 15.7176 4.40073 15.8599 4.74501C16.0023 5.08929 16.0347 5.46917 15.9527 5.83259C15.8707 6.196 15.6783 6.52517 15.4019 6.77497L14.7072 7.40174C14.6234 7.47737 14.5565 7.56972 14.5107 7.67284C14.4649 7.77595 14.4412 7.88752 14.4412 8.00036C14.4412 8.11319 14.4649 8.22477 14.5107 8.32788C14.5565 8.43098 14.6234 8.52334 14.7071 8.59897L15.4016 9.22543C15.6782 9.47538 15.871 9.80508 15.9529 10.1688C16.0349 10.5325 16.0023 10.9126 15.8595 11.2571C15.7168 11.6015 15.471 11.8933 15.1558 12.0925C14.8407 12.2916 14.4716 12.3883 14.0992 12.3694L13.166 12.322C13.0534 12.3163 12.9405 12.3341 12.8353 12.3746C12.7301 12.415 12.6345 12.4771 12.5548 12.5568C12.4751 12.6366 12.413 12.7321 12.3726 12.8373C12.3321 12.9425 12.3142 13.0551 12.32 13.1677L12.3675 14.1044C12.384 14.4749 12.2861 14.8415 12.087 15.1543C11.8879 15.4672 11.5974 15.7112 11.2548 15.8532C10.9122 15.9952 10.5342 16.0283 10.1722 15.948C9.81015 15.8676 9.48162 15.6778 9.23121 15.4043L9.22908 15.402L8.60175 14.708C8.52618 14.6243 8.4337 14.5572 8.33066 14.5114C8.22761 14.4656 8.1161 14.4419 8.00334 14.4419C7.89058 14.4419 7.77907 14.4656 7.67602 14.5114C7.57298 14.5572 7.48068 14.6241 7.40511 14.7078L7.40422 14.7088L6.77422 15.4028C6.52421 15.6776 6.19517 15.869 5.83264 15.9502C5.4701 16.0314 5.09135 15.9988 4.74802 15.8568C4.40469 15.7149 4.11348 15.4705 3.91409 15.1571C3.71471 14.8436 3.61685 14.4763 3.63386 14.1051L3.634 14.1023L3.682 13.169C3.68779 13.0564 3.66988 12.9439 3.62943 12.8387C3.58899 12.7334 3.5269 12.6379 3.44719 12.5582C3.36748 12.4785 3.27192 12.4164 3.1667 12.3759C3.06148 12.3355 2.94894 12.3176 2.83636 12.3234L1.9034 12.3707C1.53136 12.39 1.16188 12.2937 0.8467 12.0951C0.531362 11.8963 0.285273 11.6049 0.142218 11.2607C-0.000836631 10.9165 -0.0338433 10.5364 0.0477298 10.1727C0.129303 9.809 0.321456 9.47946 0.597809 9.22932L1.29219 8.60231C1.37592 8.52668 1.44286 8.43433 1.48867 8.33121C1.53448 8.2281 1.55815 8.11652 1.55815 8.00369C1.55815 7.89086 1.53448 7.77928 1.48867 7.67617C1.44286 7.57306 1.37592 7.4807 1.29219 7.40507L1.29127 7.40423L0.597406 6.77436C0.322023 6.52451 0.130369 6.19559 0.0488923 5.83278C-0.0325984 5.46992 -3.58624e-05 5.09074 0.142129 4.74709C0.284293 4.40343 0.529122 4.11207 0.843147 3.91282C1.15717 3.71357 1.52507 3.61617 1.89655 3.63393L1.898 3.634L2.83226 3.68138C2.94505 3.68731 3.05783 3.66945 3.16327 3.62896C3.26871 3.58846 3.36445 3.52624 3.44427 3.44634C3.5241 3.36643 3.58623 3.27063 3.62662 3.16515C3.66701 3.05967 3.68476 2.94688 3.67872 2.83409L3.67857 2.83124L3.63391 1.89724C3.61649 1.52596 3.71403 1.15789 3.91327 0.84411C4.1125 0.530326 4.40369 0.285657 4.74712 0.143487C5.09054 0.00131708 5.46947 -0.0314278 5.83219 0.0497203C6.19492 0.130868 6.52377 0.321957 6.77388 0.596911L6.77462 0.597731L7.40216 1.2907C7.47761 1.37445 7.56982 1.44142 7.67281 1.48726C7.7758 1.5331 7.88728 1.55678 8.00001 1.55678C8.11274 1.55678 8.22421 1.5331 8.3272 1.48726C8.43019 1.44142 8.5224 1.37445 8.59785 1.2907L8.59978 1.28855L9.22902 0.598145L9.2298 0.597285C9.47965 0.321121 9.80877 0.128944 10.1721 0.0470894Z M5.52513 5.52582C6.18151 4.86944 7.07175 4.50069 8.00001 4.50069C8.92827 4.50069 9.8185 4.86944 10.4749 5.52582C11.1313 6.18219 11.5 7.07243 11.5 8.00069C11.5 8.92895 11.1313 9.81919 10.4749 10.4756C9.8185 11.1319 8.92827 11.5007 8.00001 11.5007C7.07175 11.5007 6.18151 11.1319 5.52513 10.4756C4.86876 9.81919 4.50001 8.92895 4.50001 8.00069C4.50001 7.07243 4.86876 6.18219 5.52513 5.52582ZM8.00001 5.50069C7.33697 5.50069 6.70108 5.76408 6.23224 6.23292C5.7634 6.70176 5.50001 7.33765 5.50001 8.00069C5.50001 8.66373 5.7634 9.29962 6.23224 9.76846C6.70108 10.2373 7.33697 10.5007 8.00001 10.5007C8.66305 10.5007 9.29893 10.2373 9.76777 9.76846C10.2366 9.29962 10.5 8.66373 10.5 8.00069C10.5 7.33765 10.2366 6.70176 9.76777 6.23292C9.29893 5.76408 8.66305 5.50069 8.00001 5.50069Z"
+                ></path>
+              </g>
+            </svg>
+          )
+        }
+  18000357-b19c-4830-9cbc-a34804236952:
+    type: CONTAINER
+    name: container1
+    slots:
+      canvas:
+        - nodeID: e87532d5-8385-43ac-8cac-cd3ba5409d23
+          orderKey: Zw
+        - nodeID: 17429988-16e8-4326-b658-9abe8bb15160
+          orderKey: Zv
+    properties:
+      width: 100%
+      height: fit
+      layoutStyle: HORIZONTAL_STACK
+      padding: '0'
+      backgroundColor: transparent
+      boxShadow: '0'
+      wrapContent: wrap
+  181cad3b-ac89-45e2-a947-4636f8eb4620:
+    type: TEXT
+    name: bannerText
+    properties:
+      color: brand.banner.text
+      fontSize: sm
+      height: auto
+      left: NaN
+      maxHeight: auto
+      minHeight: 12px
+      renderMode: markdown
+      styles: |-
+        element.styles {
+        }
+      top: NaN
+      value: '{{$props.message}}'
+      width: '1'
+  1a3ed884-09e1-47cc-849e-feebd90d4df7:
+    type: FUNCTION
+    name: handleNewPost
+    properties:
+      action:
+        actionType: CALL_CLIENT_FUNCTION
+        code: |-
+          const id = $crypto.randomUUID()
+          await redirect(id)
+        targetNode:
+          ref: com.dynaboard.globals:tsclient
+  1e98d3d6-c276-4d08-aee0-db0ec8a9b766:
+    type: BUTTON
+    name: publishButton1
+    properties:
+      backgroundColor: background.levelTwo
+      fontSize: md
+      onClick:
+        function:
+          ref: c4eef9eb-72db-4d69-af19-e5eabd6b7bce
+      text: '{{titleMode.value === ''preview'' ? ''Edit'' : ''Save''}}'
+      textColor: text.primary
+      top: '5'
+      variant: ghostButton
+      width: 103px
+  24094dfe-2f15-4054-a311-cd0afb800977:
+    type: TEXT
+    name: markdown11111
+    properties:
+      top: '2'
+      width: 100%
+      height: fit
+      value: |-
+        ### Where are my blog posts stored?
+        All of your blog posts are stored in the **K/V Store resource**.
+
+        **Draft** posts are stored in the `post-draft` keyspace.
+
+        **Published** posts are stored in the `post-prod` keyspace.
+      renderMode: markdown
+      verticalAlign: top
+  242fafc6-51cc-4b76-adc4-864d1e87242c:
+    type: ITERATOR
+    name: iterator2
+    properties:
+      backgroundColor: transparent
+      borderRadius: '0'
+      boxShadow: '0'
+      component: COMPONENT/484476ad-5f4e-4183-a8f2-04ba1dfccc66
+      data: |-
+        listPosts.data
+          .map((d) => {
+            return {
+              url: `${$app.baseURL}/post/${d.key}`,
+              date: d.value.date,
+              title: `${d.value.title}`,
+            }
+          })
+          .sort()
+      height: fit
+      overflow: hidden
+      padding: '0'
+      spacing: '4'
+      width: 100%
+      wrapContent: wrap
+  24571e40-5e3e-47df-a79e-2ec5ed139253:
+    type: FUNCTION
+    name: signOut
+    properties:
+      action:
+        redirectTo: /index
+        targetNode:
+          ref: 41de9b9f-f60e-4899-9a27-d5e778411117
+        actionType: SIGN_OUT
+  28687b12-51df-45e7-af10-0e4bdbe9a6e3:
+    type: SPINNER
+    name: spinner1
+    properties:
+      color: blue.400
+      isVisible: '{{listPosts.loading && !listPosts.data}}'
+      size: lg
+      width: 100%
+  2a35eaf1-1692-4509-b5c0-8766acef2973:
+    type: TEXT
+    name: text2
+    properties:
+      height: 100%
+      renderMode: markdown
+      value: '{{$props.date}}'
+      width: fit
+  2fcc4817-2046-4516-981d-7c91771a42e1:
+    type: CONTAINER
+    name: iconContainer
+    slots:
+      canvas:
+        - nodeID: 74b25b57-9eb6-4bdc-a746-e94216f0df76
+          orderKey: a0
+    properties:
+      backgroundColor: brand.banner.icon
+      borderRadius: 50%
+      height: 20px
+      layoutStyle: HORIZONTAL_STACK
+      left: '0'
+      overflow: visible
+      padding: '0'
+      spacing: '0'
+      styles: |-
+        element.styles {
+        }
+      top: '0'
+      width: 20px
+  30bce4a0-aa80-4327-a773-d042580f9875:
+    type: TEXT
+    name: markdown1
+    properties:
+      height: 60px
+      renderMode: markdown
+      textAlign: center
+      value: '## Administrator Login'
+      width: 100%
+  30c1ba9d-cec4-4bb8-82f6-a607255f3ba9:
+    type: TEXT
+    name: tabsText
+    properties:
+      width: '12'
+      height: '16'
+      value: '{{$props?.title}}'
+      renderMode: link
+      href: '{{$props?.href}}'
+      textAlign: '{{$props?.orientation === ''column'' ? ''left'' : ''center''}}'
+      fontWeight: '{{$props.isActive ? "bold" : "400"}}'
+      color: |-
+        {{$props?.isActive
+          ? "navbar.text.active"
+          : "navbar.text.base"}}
+      styles: |-
+        ::component {
+          a {
+            padding-left: {{$props?.orientation === 'column' ? '12px' : '16px'}};
+            padding-right: {{$props?.orientation === 'column' ? '0' : '16px'}};
+
+            padding-top: {{$props?.orientation === 'column' ? '16px' : '0'}};
+            padding-bottom: {{$props?.orientation === 'column' ? '16px' : '0'}};
+          }
+        }
+  336f46ff-594d-42eb-8b11-1b51e9f7801e:
+    type: TEXT
+    name: markdown1
+    properties:
+      width: 100%
+      height: fit
+      value: >-
+        # Personal Website Template
+
+
+        This is a modern and customizable template for a personal website that
+        features a responsive design, easy navigation, and sections for your
+        bio, skills, portfolio, and blog. 
+      renderMode: markdown
+  35409356-a37a-4e24-a43d-669b080bc6c6:
+    type: PAGE
+    name: edit
+    slots:
+      canvas:
+        - nodeID: ffd61630-619f-4180-a7cb-cbecc161e2b5
+          orderKey: a2
+        - nodeID: c2080631-2ff9-46c8-b8fa-e2be8c25eef3
+          orderKey: Zz
+      functions:
+        - nodeID: 4dc624ad-73b4-4aab-93ac-5f16750bc39c
+          orderKey: a0
+        - nodeID: 04cb2e7d-986c-4cc6-b4d9-d4b7d98f1789
+          orderKey: a1
+        - nodeID: 060dbaf6-4e63-4d65-8cfc-903620d12d78
+          orderKey: a2
+        - nodeID: 70b4bc6f-1e4e-4bae-9ad8-b95f54e16225
+          orderKey: a3
+        - nodeID: a4108a86-40ea-4df7-ab6f-87fb3483da84
+          orderKey: a2V
+        - nodeID: c4eef9eb-72db-4d69-af19-e5eabd6b7bce
+          orderKey: a4
+        - nodeID: 683ef21d-c39b-486c-abd2-d99c4d8fa080
+          orderKey: a0V
+        - nodeID: 074c5e7f-ab35-4e5c-b137-23b989e7c32b
+          orderKey: a5
+        - nodeID: 05d1eeb9-cf12-48f5-b40b-d3fc803899e8
+          orderKey: a6
+        - nodeID: 1449aa1a-c765-4742-b48c-ef3b94af9723
+          orderKey: a7
+        - nodeID: 49f1309a-12e6-4d6a-9340-3e121e2702e3
+          orderKey: a8
+        - nodeID: d08c4b26-8eef-4144-8563-22d8be61af1d
+          orderKey: a9
+      variables:
+        - nodeID: beea83d1-2609-4555-a8b2-e6c9f0f70ba4
+          orderKey: a0
+        - nodeID: 93bd18fb-cc19-4ef2-b1c1-f947ee9d5e06
+          orderKey: a1
+        - nodeID: 780c952b-f33a-49e6-b7cb-307edaa13e47
+          orderKey: a2
+    properties:
+      authorizationRules: |-
+        [
+          {
+            if: {
+              $and: [
+                {
+                  'session/user': {
+                    $exists: true,
+                  },
+                },
+              ],
+            },
+            then: {
+              allow: true,
+            },
+          },
+        ]
+      layoutStyle: VERTICAL_STACK
+      route: edit/:id
+      headerComponent: COMPONENT/9e2730fa-8aff-4461-a581-7f106b1f0714
+  36854695-b279-480f-a4e4-6b9de5d02401:
+    type: CONTAINER
+    name: container1
+    slots:
+      canvas:
+        - nodeID: 8f70829d-5e43-403c-b938-3a27a786bef4
+          orderKey: a0
+        - nodeID: 8bd862bb-1955-4f4a-a5e4-94b946aafdf3
+          orderKey: Zz
+    properties:
+      backgroundColor: transparent
+      borderRadius: 0px
+      boxShadow: '0'
+      distributeContent: end
+      gridColumnGap: '0'
+      gridRowGap: '0'
+      gridRows: '1'
+      height: 64px
+      layoutStyle: HORIZONTAL_STACK
+      padding: '0'
+      styles: |-
+        element.styles {
+        }
+      width: >-
+        {{`${Math.min(parseInt($currentPage.maxWidth), $app.viewportWidth) -
+        (parseInt($currentPage.padding) * 2)}px`}}
+      spacing: '0'
+  3738b964-dee8-4d87-9368-5a2e781ee488:
+    type: TEXT
+    name: text3
+    properties:
+      fontSize: xl
+      fontWeight: '600'
+      left: NaN
+      top: NaN
+      value: Published
+      width: '1'
+  3e078026-3a93-41d0-a504-b93c205ed53a:
+    type: BUTTON
+    name: outlineButton11
+    properties:
+      backgroundColor: transparent
+      borderColor: border.300
+      borderRadius: '0'
+      borderWidth: '0'
+      fontSize: lg
+      height: 48px
+      left: NaN
+      onClick:
+        function:
+          ref: a4108a86-40ea-4df7-ab6f-87fb3483da84
+      styles: |-
+        ::component {
+          border-width: {{ mode.value === 'preview' ? '1px 1px 0px 1px' : '0'}};
+          border-radius: {{ mode.value === 'preview' ? '6px 6px 0px 0px' : '0'}};
+          z-index: 1000000 !important;
+        }
+
+        button:hover {
+          background: transparent;
+        }
+
+        ::wrapper {
+        }
+      text: Preview
+      textColor: text.primary
+      top: NaN
+      variant: outlineButton
+      width: 80px
+  3e7bf6ee-f305-463f-b824-71aacd34d338:
+    type: RESOURCE/ONE_TIME_PIN_AUTH
+    name: OneTimePinAuth1
+  3ebcd680-c7b1-4a49-9076-f0cc2bd42bd5:
+    type: PAGE
+    name: README
+    slots:
+      canvas:
+        - nodeID: 336f46ff-594d-42eb-8b11-1b51e9f7801e
+          orderKey: a0
+        - nodeID: 48cf3df4-1abc-45a5-ac94-f2ab425561d4
+          orderKey: a1
+        - nodeID: 18000357-b19c-4830-9cbc-a34804236952
+          orderKey: a2
+        - nodeID: 5cd6fa5d-a0ba-4bf2-aa86-622973afba15
+          orderKey: a3
+        - nodeID: fd9b7b92-97cc-4070-a681-5af58373c8fb
+          orderKey: a0V
+        - nodeID: 24094dfe-2f15-4054-a311-cd0afb800977
+          orderKey: a4
+    properties:
+      layoutStyle: VERTICAL_STACK
+      authorizationRules: |-
+        [
+          {
+            if: {
+              $and: [
+                {
+                  'session/user': {
+                    $exists: false,
+                  },
+                },
+              ],
+            },
+            then: {
+              allow: false,
+            },
+          },
+        ]
+  41de9b9f-f60e-4899-9a27-d5e778411117:
+    type: RESOURCE/USER_SESSION
+    name: UserSession1
+  484476ad-5f4e-4183-a8f2-04ba1dfccc66:
+    type: COMPONENT
+    name: postItem
+    slots:
+      canvas:
+        - nodeID: 93e92dd5-0d61-45d6-a0dc-eca4de979d5e
+          orderKey: a0
+      functions:
+        - nodeID: a7628013-93f5-4970-bf2a-d957377996e5
+          orderKey: a0
+    properties:
+      height: 40px
+      layoutStyle: VERTICAL_STACK
+      props:
+        - defaultValue: YYYY-MM-DD
+          description: ''
+          id: 9f578b3d-bf6a-4ee2-9c8d-f4d8b83c290e
+          key: date
+          propType: string
+        - defaultValue: Hello World
+          description: ''
+          id: e881f1fd-315f-40fa-bf3f-dfbd53f19641
+          key: title
+          propType: string
+        - defaultValue: ''
+          description: ''
+          id: ad6b719a-95a6-434c-8284-d71abc055b0d
+          key: url
+          propType: string
+      spacing: '0'
+      width: 226px
+  48cf3df4-1abc-45a5-ac94-f2ab425561d4:
+    type: TEXT
+    name: markdown11
+    properties:
+      top: NaN
+      left: NaN
+      width: 100%
+      height: fit
+      value: |
+        ## Getting Started
+      renderMode: markdown
+      verticalAlign: top
+  49f1309a-12e6-4d6a-9340-3e121e2702e3:
+    type: FUNCTION
+    name: loadDraft
+    properties:
+      action:
+        actionType: GET_RECORD
+        key: '{{$args[0]}}'
+        targetNode:
+          ref: 9fb5b18f-e398-470d-9a19-031425edbefc
+  4dc624ad-73b4-4aab-93ac-5f16750bc39c:
+    type: FUNCTION
+    name: savePost
+    properties:
+      action:
+        actionType: CALL_SERVER_FUNCTION
+        code: |-
+          const id = {{$currentPage.params.id}}
+
+          const title = {{ titleInput.value }}
+
+          const body = {{ bodyInput.value }}
+
+          const date = {{ dateInput.value }}
+
+          const value = { title, date, body }
+          return $kv.set(id, value)
+        targetNode:
+          ref: cee57770-028b-405c-a743-7a0a1dfe0500
+  4efe5317-e6be-40d1-a2a4-a675af354a79:
+    type: TEXT
+    name: text1
+    properties:
+      height: fit
+      left: NaN
+      renderMode: markdown
+      top: NaN
+      value: >-
+        # Welcome to My Personal Website!
+
+
+        ## About Me
+
+
+        My name is [Your Name] and I'm a [Your Profession]. I have [Number of
+        Years] years of experience in [Industry/Field]. I am passionate about
+        [Your Interests/Hobbies].
+
+
+        ## Education
+
+
+        - [Degree] in [Major] from [University], [Year]
+
+        - [Degree] in [Major] from [University], [Year]
+
+
+        ## Work Experience
+
+
+        ### [Current/Previous Job Title], [Current/Previous Company]
+
+
+        - [Job Duty 1]
+
+        - [Job Duty 2]
+
+        - [Job Duty 3]
+
+
+        ### [Previous Job Title], [Previous Company]
+
+
+        - [Job Duty 1]
+
+        - [Job Duty 2]
+
+        - [Job Duty 3]
+
+
+        ## Skills
+
+
+        - [Skill 1]
+
+        - [Skill 2]
+
+        - [Skill 3]
+
+        - [Skill 4]
+
+        - [Skill 5]
+
+
+        ## Interests/Hobbies
+
+
+        - [Interest/Hobby 1]
+
+        - [Interest/Hobby 2]
+
+        - [Interest/Hobby 3]
+
+        - [Interest/Hobby 4]
+
+
+        Feel free to contact me at [Your Email] for any inquiries or
+        collaborations.
+      verticalAlign: top
+      width: 100%
+  502ad6de-6f1f-402b-bcfb-fd7103e6e0cd:
+    type: TEXT
+    name: markdown1
+    properties:
+      height: 48px
+      isVisible: '{{titleMode.value === ''preview''}}'
+      renderMode: markdown
+      styles: |-
+        h3 {
+          text-overflow: ellipsis;
+          overflow: hidden;
+          white-space: nowrap;
+        }
+
+        ::component {
+
+        }
+
+        ::wrapper {
+        }
+      value: '### {{titleInput.value}}'
+      width: '1'
+  50758d27-1a38-4b15-8a48-3fc6fa6268ef:
+    type: CONTAINER
+    name: container1
+    slots:
+      canvas:
+        - nodeID: d43fc576-099f-427d-a0bd-97f5bcfd222a
+          orderKey: a0
+        - nodeID: 60e328a3-b6b3-4fda-b860-8338d5b3cf62
+          orderKey: Zz
+    properties:
+      alignContent: center
+      backgroundColor: transparent
+      boxShadow: '0'
+      distributeContent: between
+      height: fit
+      layoutStyle: HORIZONTAL_STACK
+      width: 100%
+  569ac839-8194-4691-ab6f-64cf543e910c:
+    type: FUNCTION
+    name: editRow
+    properties:
+      action:
+        actionType: CALL_CLIENT_FUNCTION
+        code: |-
+          const id = {{ dataTable1.selectedRow.key }}
+
+          await redirect(id)
+        targetNode:
+          ref: com.dynaboard.globals:tsclient
+  57e1d671-bc13-43d4-9380-05ae2f0d656a:
+    type: TEXT
+    name: text3
+    properties:
+      color: '#FFF'
+      fontWeight: '600'
+      left: NaN
+      textAlign: center
+      top: NaN
+      value: '{{version.value ?? ''New''}}'
+      width: 80px
+  58ce3ae3-3288-4791-ba60-09106962d403:
+    type: FUNCTION
+    name: getPosts
+    properties:
+      action:
+        actionType: CALL_SERVER_FUNCTION
+        code: return $kv.list()
+        targetNode:
+          ref: cee57770-028b-405c-a743-7a0a1dfe0500
+      callingSemantics: REACTIVE
+  5a2c55be-6c76-4e24-a02c-bb1964f68820:
+    type: CONTAINER
+    name: container6
+    slots:
+      canvas:
+        - nodeID: 11f135db-5cfd-4ea2-bbc9-4471b8d0a93e
+          orderKey: a1
+        - nodeID: 6cb80eed-8ddc-4af9-9c37-d9b6401e1cac
+          orderKey: a0
+    properties:
+      alignContent: center
+      backgroundColor: transparent
+      borderRadius: '0'
+      boxShadow: '0'
+      distributeContent: between
+      height: 32px
+      isVisible: '{{ mode.value === "edit" }}'
+      layoutStyle: HORIZONTAL_STACK
+      left: NaN
+      padding: '0'
+      styles: |-
+        ::component {
+        }
+
+        ::wrapper {
+          padding: 0px 16px 0px 16px;
+        }
+      top: NaN
+      width: 100%
+  5a31842b-a49d-4ea5-aeb0-7f13f289156d:
+    type: CONTAINER
+    name: container8
+    slots:
+      canvas:
+        - nodeID: e8148ba6-f2b3-491c-9e47-e57de5d6d93c
+          orderKey: a1
+    properties:
+      alignContent: center
+      backgroundColor: transparent
+      borderRadius: '0'
+      boxShadow: '0'
+      distributeContent: end
+      height: 100%
+      layoutStyle: HORIZONTAL_STACK
+      left: NaN
+      styles: |-
+        ::component {
+        }
+
+        ::wrapper {
+
+        }
+      top: NaN
+      width: '1'
+  5cd6fa5d-a0ba-4bf2-aa86-622973afba15:
+    type: TEXT
+    name: markdown1111
+    properties:
+      top: '2'
+      width: 100%
+      height: fit
+      value: >
+        ## Blogging / Posting
+
+        Go to your deployed application and navigate to the `/login` page. Once
+        you sign into your application, you will be logged in and have access to
+        the `/admin` page. In the admin page, you will be able to see your
+        published and draft posts.
+
+
+        ***Draft posts are not visible to your visitors.***
+      renderMode: markdown
+      verticalAlign: top
+  608a88db-cca5-4c7c-928d-6a9d44cb5017:
+    type: FUNCTION
+    name: getUserEmail
+    properties:
+      action:
+        accessor: email
+        targetNode:
+          ref: 41de9b9f-f60e-4899-9a27-d5e778411117
+        actionType: GET_SESSION
+      callingSemantics: REACTIVE
+  609d90fe-f13f-4fe5-ab67-f62dbbb46ebd:
+    type: MEDIA
+    name: media1
+    properties:
+      alt: 🤖
+      height: 150px
+      left: NaN
+      objectFit: contain
+      styles: |-
+        img {
+          border-radius: 100%;
+        }
+      top: NaN
+      type: image
+      url: '{{profileImageURL.value}}'
+      width: 150px
+  60e328a3-b6b3-4fda-b860-8338d5b3cf62:
+    type: TEXT
+    name: text1
+    properties:
+      fontSize: xl
+      fontWeight: '600'
+      left: NaN
+      top: NaN
+      value: Drafts
+      width: '1'
+  626ba64b-dfa7-465f-bbdc-0517666bb814:
+    type: FUNCTION
+    name: redirect
+    properties:
+      action:
+        actionType: NAVIGATE_TO_PAGE
+        path: '{{$app.baseURL}}/edit/{{$args[0]}}'
+        target: _self
+        targetNode:
+          ref: com.dynaboard.globals:browser
+  683ef21d-c39b-486c-abd2-d99c4d8fa080:
+    type: FUNCTION
+    name: publishPost
+    properties:
+      action:
+        actionType: CALL_SERVER_FUNCTION
+        code: |-
+          const id = {{$currentPage.params.id}}
+
+          const title = {{ titleInput.value }}
+
+          const body = {{ bodyInput.value }}
+
+          const date = {{ dateInput.value }}
+
+          const value = { title, date, body }
+          return $kv.set(id, value)
+        targetNode:
+          ref: a49123eb-2413-4c07-8249-687ac02c8786
+      onSuccess:
+        function:
+          ref: 074c5e7f-ab35-4e5c-b137-23b989e7c32b
+  6aeebc33-0f81-4bb1-965d-cccea2ced631:
+    type: BUTTON
+    name: publishButton
+    properties:
+      fontSize: md
+      isEnabled: '{{titleInput.value && dateInput.value && bodyInput.value}} '
+      onClick:
+        function:
+          ref: 683ef21d-c39b-486c-abd2-d99c4d8fa080
+      text: Publish
+      top: '5'
+      variant: solid
+  6c845022-e8e6-4fec-9215-8bb828ffc810:
+    type: FUNCTION
+    name: deleteProdRow
+    properties:
+      action:
+        actionType: DELETE_RECORD
+        key: '{{dataTable3.selectedRow.key}}'
+        targetNode:
+          ref: c6c218f0-82ff-45a8-9375-9611dbc3590b
+      onSuccess:
+        function:
+          ref: 802310c7-75c8-4fea-9303-54ad4f1f3090
+  6cb80eed-8ddc-4af9-9c37-d9b6401e1cac:
+    type: INPUT
+    name: dateInput
+    properties:
+      label: ''
+      left: NaN
+      top: NaN
+      type: date
+      width: 121px
+  6dc45113-0b1c-49d0-9043-290efe4a6e43:
+    type: SPINNER
+    name: spinner1
+    properties:
+      color: blue.400
+      isVisible: '{{getPost.loading}}'
+      size: lg
+      width: 100%
+  70b4bc6f-1e4e-4bae-9ad8-b95f54e16225:
+    type: FUNCTION
+    name: onEdit
+    properties:
+      action:
+        actionType: CALL_CLIENT_FUNCTION
+        code: mode.value = 'edit'
+        targetNode:
+          ref: com.dynaboard.globals:tsclient
+  74b25b57-9eb6-4bdc-a746-e94216f0df76:
+    type: TEXT
+    name: icon
+    properties:
+      fontSize: sm
+      height: 100%
+      left: NaN
+      lineHeight: '1.4'
+      styles: |-
+        element.styles {
+        }
+      textAlign: center
+      top: NaN
+      value: 💡
+      width: 100%
+  780c952b-f33a-49e6-b7cb-307edaa13e47:
+    type: LOCAL_VARIABLE
+    name: version
+  7d399af5-a221-4280-b9f6-ef030a417fa2:
+    type: CONTAINER
+    name: container2
+    slots:
+      canvas:
+        - nodeID: 6aeebc33-0f81-4bb1-965d-cccea2ced631
+          orderKey: a0
+        - nodeID: f2daa312-9ba1-4301-a07c-34a236f09950
+          orderKey: Zz
+    properties:
+      backgroundColor: transparent
+      borderRadius: '0'
+      boxShadow: '0'
+      distributeContent: end
+      height: 64px
+      layoutStyle: HORIZONTAL_STACK
+      spacing: 8px
+      width: 100%
+  7ee23309-6b63-43de-8bce-608aa2ce696f:
+    type: TEXT
+    name: text1
+    properties:
+      height: fit
+      renderMode: markdown
+      styles: |-
+        ::component {
+          .chakra-text .chakra-code {
+            background: transparent;
+            font-size: 100%;
+            line-height: 1.25;
+            color: blue.400;
+            _dark {
+              color: blue.400;
+            }
+          }
+        }
+
+        ::wrapper {
+        }
+      value: |-
+        # {{getPost.data?.title ?? ''}}
+        `{{getPost.data?.date || ' '}}`
+      width: 100%
+  802310c7-75c8-4fea-9303-54ad4f1f3090:
+    type: FUNCTION
+    name: getPublishedPosts
+    properties:
+      action:
+        actionType: LIST_RECORDS
+        pattern: ''
+        targetNode:
+          ref: c6c218f0-82ff-45a8-9375-9611dbc3590b
+      callingSemantics: REACTIVE
+  86fe6bc9-9144-4c91-b3fd-53c697b0c344:
+    type: CONTAINER
+    name: container2
+    slots:
+      canvas:
+        - nodeID: 3738b964-dee8-4d87-9368-5a2e781ee488
+          orderKey: Zz
+    properties:
+      alignContent: center
+      backgroundColor: transparent
+      boxShadow: '0'
+      distributeContent: between
+      height: fit
+      layoutStyle: HORIZONTAL_STACK
+      width: 100%
+  8bd862bb-1955-4f4a-a5e4-94b946aafdf3:
+    type: COMPONENT/8c60717e-5d56-415e-9bfb-f184ae931938
+    name: CustomTabNavItem3
+    componentRef: 8c60717e-5d56-415e-9bfb-f184ae931938
+    properties:
+      isVisible: '{{getUserSession.data || $app.mode === ''editor''}}'
+      width: 96px
+      height: 64px
+      $props:
+        orientation: row
+        title: Admin{{$app.mode === 'editor' && '*'}}
+        href: /admin
+        isActive: '{{$currentPage.nodeName === ''admin''}}'
+        totalItems: ''
+        isDisabled: false
+  8c355f8d-9b8a-4b87-ac23-f37317a5bd21:
+    type: TEXT
+    name: text2
+    properties:
+      height: fit
+      isVisible: '{{ mode.value === "preview" }}'
+      renderMode: markdown
+      styles: |-
+        ::component {
+          .chakra-text .chakra-code {
+            background: transparent;
+            font-size: 100%;
+            line-height: 1.25;
+            color: blue.400;
+            _dark {
+              color: blue.400;
+            }
+          }
+        }
+
+        ::wrapper {
+        }
+      value: |-
+        # {{titleInput.value}}
+        `{{dateInput.value || ' '}}`
+
+        {{bodyInput.value}}
+      verticalAlign: top
+      width: '1'
+  8c60717e-5d56-415e-9bfb-f184ae931938:
+    type: COMPONENT
+    name: CustomTabNavItem
+    tags:
+      - navbar
+    slots:
+      canvas:
+        - nodeID: 30c1ba9d-cec4-4bb8-82f6-a607255f3ba9
+          orderKey: a0
+    properties:
+      width: 128px
+      gridRowGap: '0'
+      gridColumnGap: '0'
+      overflow: auto
+      styles: |2-
+          ::component {
+          border-bottom-width: {{$props?.orientation === 'column'
+            ? '0px'
+            : '2px'}};
+          border-left-width: {{$props?.orientation === 'column'
+            ? '2px'
+            : '0px'}};
+          border-color: {{$props?.isActive ? `${$app.colorMode}.navbar.border.active` : `${$app.colorMode}.navbar.border.base`}};
+          border-top-width: 0px;
+
+          &:hover {
+            border-color: {{$props?.isActive ? `${$app.colorMode}.navbar.border.active` : `${$app.colorMode}.navbar.border.hover`}};
+          }
+        }
+      props:
+        - id: 040b04c9-1c3d-4189-8161-6de90efecd1b
+          key: title
+          description: ''
+          propType: string
+          defaultValue: Title
+        - id: 4650baa1-f3d0-48f8-be09-581f014081f8
+          key: href
+          displayName: Link
+          description: ''
+          propType: string
+          defaultValue: https://google.com
+        - id: d3ed9758-c19f-4961-8663-ae4a5abaa0a1
+          key: isActive
+          description: ''
+          propType: boolean
+          defaultValue: false
+        - id: 2ceeff85-ec29-4470-9209-23a8cc2b2886
+          key: orientation
+          description: ''
+          propType: string
+          defaultValue: column
+        - id: 05064d59-2131-49fe-ab07-6d6bb0b3463f
+          key: totalItems
+          description: ''
+          propType: number
+          defaultValue: '1'
+        - id: e382dbf3-40d7-4960-baf5-30074f45af10
+          key: isDisabled
+          description: ''
+          propType: boolean
+          defaultValue: ''
+      height: 48px
+  8ee14e7f-714a-436c-acaa-30ed21383070:
+    type: FUNCTION
+    name: getPost
+    properties:
+      action:
+        actionType: CALL_SERVER_FUNCTION
+        code: |
+          return await $kv.get({{ $currentPage.params.id }})
+        targetNode:
+          ref: a49123eb-2413-4c07-8249-687ac02c8786
+      runOnPageLoad: true
+  8f70829d-5e43-403c-b938-3a27a786bef4:
+    type: NAVBAR
+    name: tabsNavBar1
+    properties:
+      itemHeight: 64px
+      itemWidth: 96px
+      navBarItems:
+        - accessor: 97c50cb7-8330-4b3a-a116-c9589ea24fb4
+          id: c92ef1e5-5b84-44cd-84a1-321550bc1199
+          isVisible: false
+          orderKey: a3
+          title: Login
+        - accessor: afcc2c83-f811-481d-baa7-3c07178cc6aa
+          id: c1b19f06-b63e-44ee-ad78-0a69d77b5dd0
+          isVisible: false
+          orderKey: a4
+          title: Admin
+        - accessor: 06dde8d1-28cb-4e27-bdcb-3cdee95dc1df
+          id: 0d8b72af-7a44-45d8-abde-210622e9ff34
+          isVisible: true
+          orderKey: a0
+          title: About
+        - accessor: b0d722ed-ee13-4ca2-a573-7cfd80a18aed
+          id: 8ddf0acc-1ae9-4302-8a54-6847c8f23ca8
+          isVisible: true
+          orderKey: a1
+          title: Posts
+        - title: R E A D M E
+          id: ab8d9480-6fc5-4853-bb89-16c67a32186c
+          accessor: 3ebcd680-c7b1-4a49-9076-f0cc2bd42bd5
+          isVisible: false
+          orderKey: a0
+      width: fit
+      component: COMPONENT/8c60717e-5d56-415e-9bfb-f184ae931938
+  936c3de8-e296-44dc-a45b-ab04deb6b654:
+    type: TEXT
+    name: text2
+    properties:
+      height: fit
+      renderMode: markdown
+      styles: |-
+        ::component {
+          .chakra-text .chakra-code {
+            background: transparent;
+            font-size: 100%;
+            line-height: 1.25;
+            color: blue.400;
+            _dark {
+              color: blue.400;
+            }
+          }
+        }
+
+        ::wrapper {
+        }
+      value: '{{getPost.data?.body ?? ''''}}'
+      width: 100%
+  93bd18fb-cc19-4ef2-b1c1-f947ee9d5e06:
+    type: LOCAL_VARIABLE
+    name: titleMode
+    properties:
+      value: '{{version.value === ''New'' ? ''edit'' : ''preview''}}'
+  93e92dd5-0d61-45d6-a0dc-eca4de979d5e:
+    type: CONTAINER
+    name: container1
+    slots:
+      canvas:
+        - nodeID: a79835bb-4095-4916-9bea-3247ee696e71
+          orderKey: a0
+        - nodeID: 2a35eaf1-1692-4509-b5c0-8766acef2973
+          orderKey: Zz
+    properties:
+      backgroundColor: transparent
+      borderRadius: 0px
+      boxShadow: '0'
+      height: '1'
+      layoutStyle: HORIZONTAL_STACK
+      left: NaN
+      onClick:
+        function:
+          ref: a7628013-93f5-4970-bf2a-d957377996e5
+      overflow: hidden
+      padding: '0'
+      spacing: 16px
+      styles: |-
+        ::component {
+          cursor: pointer;
+        }
+
+        ::wrapper {
+        }
+      top: NaN
+      width: 100%
+  9583fe87-2dd4-4f6d-89d3-9c8cef1cc11e:
+    type: INPUT
+    name: titleInput
+    properties:
+      isVisible: '{{titleMode.value === ''edit''}}'
+      label: ''
+      labelStyle: top
+      left: NaN
+      top: NaN
+      type: text
+      width: '1'
+  97c50cb7-8330-4b3a-a116-c9589ea24fb4:
+    type: PAGE
+    name: login
+    slots:
+      canvas:
+        - nodeID: 9a4a328d-40c6-49b6-a116-95d53ad681a4
+          orderKey: Zy
+        - nodeID: 30bce4a0-aa80-4327-a773-d042580f9875
+          orderKey: ZxV
+    properties:
+      authorizationRules: |-
+        [
+          {
+            if: {
+              $and: [
+                {
+                  'session/user': {
+                    $exists: false,
+                  },
+                },
+              ],
+            },
+            then: {
+              allow: true,
+            },
+          },
+          {
+            if: {
+              $and: [
+                {
+                  'session/user': {
+                    $exists: true,
+                  },
+                },
+              ],
+            },
+            then: {
+              allow: true,
+            },
+          },
+        ]
+      includeInSitemap: false
+      layoutStyle: VERTICAL_STACK
+      headerComponent: COMPONENT/9e2730fa-8aff-4461-a581-7f106b1f0714
+  9a4a328d-40c6-49b6-a116-95d53ad681a4:
+    type: SIGN-IN
+    name: signIn1
+    properties:
+      defaultRedirectPath: /admin
+      height: 223px
+      left: '5'
+      top: '12'
+      width: 100%
+  9e2730fa-8aff-4461-a581-7f106b1f0714:
+    type: COMPONENT
+    name: header
+    slots:
+      canvas:
+        - nodeID: 36854695-b279-480f-a4e4-6b9de5d02401
+          orderKey: a0
+      functions:
+        - nodeID: d2a5334b-abe0-44a6-87fe-8a786b3f0151
+          orderKey: a0
+    properties:
+      alignContent: center
+      gridRows: '1'
+      height: 64px
+      layoutStyle: VERTICAL_STACK
+      spacing: '0'
+      width: 814px
+  9fb5b18f-e398-470d-9a19-031425edbefc:
+    type: RESOURCE/KVSTORE
+    name: KVStoreDraft
+    properties:
+      keyspace: post-draft
+  9ff51cb8-e691-4d29-b75b-68661c83221c:
+    type: CONTAINER
+    name: container3
+    slots:
+      canvas:
+        - nodeID: e046d384-2fcd-4361-9183-abb70b0f73a9
+          orderKey: a0
+        - nodeID: 3e078026-3a93-41d0-a504-b93c205ed53a
+          orderKey: a1
+        - nodeID: 5a31842b-a49d-4ea5-aeb0-7f13f289156d
+          orderKey: a2
+    properties:
+      alignContent: end
+      backgroundColor: border.100
+      borderRadius: '0'
+      boxShadow: '0'
+      height: 64px
+      layoutStyle: HORIZONTAL_STACK
+      overflow: hidden
+      padding: '0'
+      spacing: '0'
+      styles: |-
+        ::component {
+          padding-left: 12px;
+          border-width: 0px;
+        }
+
+        ::wrapper {
+        }
+      width: 100%
+  a4108a86-40ea-4df7-ab6f-87fb3483da84:
+    type: FUNCTION
+    name: onPreview
+    properties:
+      action:
+        actionType: CALL_CLIENT_FUNCTION
+        code: mode.value = 'preview'
+        targetNode:
+          ref: com.dynaboard.globals:tsclient
+  a49123eb-2413-4c07-8249-687ac02c8786:
+    type: RESOURCE/TYPESCRIPT_SERVER
+    name: prodTSServer
+    properties:
+      keyspace: post-prod
+  a7628013-93f5-4970-bf2a-d957377996e5:
+    type: FUNCTION
+    name: onClick
+    properties:
+      action:
+        actionType: NAVIGATE_TO_PAGE
+        path: '{{$props.url}}'
+        target: _self
+        targetNode:
+          ref: com.dynaboard.globals:browser
+  a79835bb-4095-4916-9bea-3247ee696e71:
+    type: TEXT
+    name: text1
+    properties:
+      color: blue.400
+      height: 100%
+      value: '{{$props.title}}'
+      width: '1'
+  afcc2c83-f811-481d-baa7-3c07178cc6aa:
+    type: PAGE
+    name: admin
+    slots:
+      canvas:
+        - nodeID: f7d5e9db-8b41-4363-b895-de99056603ce
+          orderKey: ZyV
+        - nodeID: d647c080-9503-4f31-96d6-6c565b11f9c8
+          orderKey: Zzp
+        - nodeID: 50758d27-1a38-4b15-8a48-3fc6fa6268ef
+          orderKey: Zv
+        - nodeID: 86fe6bc9-9144-4c91-b3fd-53c697b0c344
+          orderKey: Zz
+        - nodeID: b46a72f6-8c6e-4e06-8365-d845569249a0
+          orderKey: Zu
+      functions:
+        - nodeID: 58ce3ae3-3288-4791-ba60-09106962d403
+          orderKey: a0
+        - nodeID: 07e86897-7afb-4a89-a7f5-15d0c9208b3d
+          orderKey: a1
+        - nodeID: 626ba64b-dfa7-465f-bbdc-0517666bb814
+          orderKey: a2
+        - nodeID: 1a3ed884-09e1-47cc-849e-feebd90d4df7
+          orderKey: a3
+        - nodeID: 569ac839-8194-4691-ab6f-64cf543e910c
+          orderKey: a4
+        - nodeID: 802310c7-75c8-4fea-9303-54ad4f1f3090
+          orderKey: a5
+        - nodeID: e8af3fa7-99f2-445a-bc7e-c9a9e26dfafd
+          orderKey: a6
+        - nodeID: 6c845022-e8e6-4fec-9215-8bb828ffc810
+          orderKey: a7
+        - nodeID: 24571e40-5e3e-47df-a79e-2ec5ed139253
+          orderKey: a8
+        - nodeID: 608a88db-cca5-4c7c-928d-6a9d44cb5017
+          orderKey: a9
+    properties:
+      authorizationRules: |-
+        [
+          {
+            if: {
+              $and: [
+                {
+                  'session/user': {
+                    $exists: true,
+                  },
+                },
+              ],
+            },
+            then: {
+              allow: true,
+            },
+          },
+        ]
+      layoutStyle: VERTICAL_STACK
+      headerComponent: COMPONENT/9e2730fa-8aff-4461-a581-7f106b1f0714
+  b0d722ed-ee13-4ca2-a573-7cfd80a18aed:
+    type: PAGE
+    name: posts
+    slots:
+      canvas:
+        - nodeID: 242fafc6-51cc-4b76-adc4-864d1e87242c
+          orderKey: a0V
+        - nodeID: 28687b12-51df-45e7-af10-0e4bdbe9a6e3
+          orderKey: a0G
+      functions:
+        - nodeID: e10d6e49-59dc-460b-836d-2894c8c965fc
+          orderKey: a1
+    properties:
+      layoutStyle: VERTICAL_STACK
+      title: Posts
+      headerComponent: COMPONENT/9e2730fa-8aff-4461-a581-7f106b1f0714
+  b46a72f6-8c6e-4e06-8365-d845569249a0:
+    type: BUTTON
+    name: signOutButton
+    properties:
+      isEnabled: '{{getUserEmail.data}}'
+      width: 100%
+      onClick:
+        function:
+          ref: 24571e40-5e3e-47df-a79e-2ec5ed139253
+      text: Sign Out
+      backgroundColor: red.600
+  bd0e5ad4-74ff-4366-b4dd-098767afa5d6:
+    type: CONFIG
+    name: profileImageURL
+    properties:
+      value: https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_1280.png
+  beea83d1-2609-4555-a8b2-e6c9f0f70ba4:
+    type: LOCAL_VARIABLE
+    name: mode
+    properties:
+      value: '"edit"'
+  c05f48de-b1e1-4850-b8b0-65b29b3e6d82:
+    type: PAGE
+    name: post
+    slots:
+      canvas:
+        - nodeID: 7ee23309-6b63-43de-8bce-608aa2ce696f
+          orderKey: a0
+        - nodeID: 936c3de8-e296-44dc-a45b-ab04deb6b654
+          orderKey: a1
+        - nodeID: 6dc45113-0b1c-49d0-9043-290efe4a6e43
+          orderKey: a2
+      functions:
+        - nodeID: 8ee14e7f-714a-436c-acaa-30ed21383070
+          orderKey: a0
+    properties:
+      layoutStyle: VERTICAL_STACK
+      route: post/:id
+      title: post
+      headerComponent: COMPONENT/9e2730fa-8aff-4461-a581-7f106b1f0714
+  c2080631-2ff9-46c8-b8fa-e2be8c25eef3:
+    type: CONTAINER
+    name: container5
+    slots:
+      canvas:
+        - nodeID: 1e98d3d6-c276-4d08-aee0-db0ec8a9b766
+          orderKey: a0
+        - nodeID: 9583fe87-2dd4-4f6d-89d3-9c8cef1cc11e
+          orderKey: Zz
+        - nodeID: 502ad6de-6f1f-402b-bcfb-fd7103e6e0cd
+          orderKey: Zy
+    properties:
+      alignContent: center
+      backgroundColor: transparent
+      boxShadow: '0'
+      distributeContent: end
+      height: 32px
+      layoutStyle: HORIZONTAL_STACK
+      spacing: '8'
+      width: 100%
+  c4eef9eb-72db-4d69-af19-e5eabd6b7bce:
+    type: FUNCTION
+    name: toggleTitleMode
+    properties:
+      action:
+        actionType: CALL_CLIENT_FUNCTION
+        code: |-
+          if (titleMode.value === 'preview') {
+            titleMode.value = 'edit'
+          } else {
+            titleMode.value = 'preview'
+          }
+        targetNode:
+          ref: com.dynaboard.globals:tsclient
+  c6c218f0-82ff-45a8-9375-9611dbc3590b:
+    type: RESOURCE/KVSTORE
+    name: KVStoreProd
+    properties:
+      keyspace: post-prod
+  c7b1f837-7100-4af9-99df-f16b06d9f8d3:
+    type: INPUT
+    name: bodyInput
+    properties:
+      height: 400px
+      isVisible: '{{ mode.value === "edit" }}'
+      label: ''
+      labelStyle: top
+      styles: |
+        ::component {
+          textarea {
+            resize: none;
+          }
+        }
+
+        ::wrapper {
+        }
+      type: textAreaInput
+      width: '1'
+  ca83dbb8-955a-45f6-9450-cb5c23a5da02:
+    type: CONTAINER
+    name: bannerContainer
+    slots:
+      canvas:
+        - nodeID: 181cad3b-ac89-45e2-a947-4636f8eb4620
+          orderKey: a0
+        - nodeID: 2fcc4817-2046-4516-981d-7c91771a42e1
+          orderKey: Zz
+    properties:
+      alignContent: center
+      backgroundColor: brand.banner.background
+      borderRadius: 6px
+      height: 100%
+      layoutStyle: HORIZONTAL_STACK
+      overflow: hidden
+      padding: 8px
+      styles: |-
+        element.styles {
+          border: 1px solid;
+          border-color: {{$app.colorMode === 'dark' ? "#FFFCF9" : "#FED7AA"}};
+        }
+      width: 100%
+  cee57770-028b-405c-a743-7a0a1dfe0500:
+    type: RESOURCE/TYPESCRIPT_SERVER
+    name: TypeScriptServer1
+    properties:
+      keyspace: post-draft
+  d08c4b26-8eef-4144-8563-22d8be61af1d:
+    type: FUNCTION
+    name: loadProd
+    properties:
+      action:
+        actionType: GET_RECORD
+        key: '{{$args[0]}}'
+        targetNode:
+          ref: c6c218f0-82ff-45a8-9375-9611dbc3590b
+  d2a5334b-abe0-44a6-87fe-8a786b3f0151:
+    type: FUNCTION
+    name: getUserSession
+    properties:
+      action:
+        accessor: email
+        targetNode:
+          ref: 41de9b9f-f60e-4899-9a27-d5e778411117
+        actionType: GET_SESSION
+      callingSemantics: REACTIVE
+  d43fc576-099f-427d-a0bd-97f5bcfd222a:
+    type: BUTTON
+    name: solidButton1
+    properties:
+      left: '11'
+      onClick:
+        function:
+          ref: 1a3ed884-09e1-47cc-849e-feebd90d4df7
+      text: New Post
+      width: 117px
+  d6473a62-fbcd-4c51-9d55-f78b7eba13ce:
+    type: THEME
+    name: theme1
+    properties:
+      theme: |-
+        return {
+          colors: {
+            light: {
+         
+              brand: {
+                primary: "#002175",
+                header: "#002175CC",
+                subheading: "#002175DC",
+                banner: {
+                  text: "#525252",
+                  icon: "#F76820",
+                  background: "#FFF7EDFF",
+                  border: "#FED7AA"
+                },
+              },
+            },
+            dark: {
+
+              brand: {
+                primary: "#05319E",
+                header: "#05319ECC",
+                subheading: "#002175DC",
+                banner: {
+                  text: "#525252",
+                  icon: "#F76820",
+                  background: "#F0D1AA",
+                  border: "#FFFCF9"
+                },
+              },
+            }
+          }
+        }
+  d647c080-9503-4f31-96d6-6c565b11f9c8:
+    type: DATA_TABLE
+    name: dataTable3
+    properties:
+      autoColumns: false
+      columns:
+        - accessor: value.title
+          allowSortBy: 'true'
+          buttonText: Button
+          dateTimeFormat: MMMM dd, y 'at' ttt
+          header: title
+          id: 5b6a9ed6-4271-4976-ae6c-42f5d1438c30
+          index: 1
+          isVisible: true
+          linkTarget: _blank
+          minWidth: '40'
+          minWidthUnit: '%'
+          onButtonClick: null
+          renderAs: default
+          width: '40'
+          widthUnit: '%'
+        - accessor: createdAt
+          allowSortBy: 'true'
+          buttonText: Button
+          dateTimeFormat: MMMM dd, y 'at' ttt
+          header: createdAt
+          id: a3ede757-c069-4052-a3f2-7743156c4eeb
+          index: 2
+          isVisible: true
+          linkTarget: _blank
+          minWidth: 15
+          minWidthUnit: '%'
+          onButtonClick: null
+          renderAs: date
+          width: '15'
+          widthUnit: '%'
+        - accessor: updatedAt
+          allowSortBy: 'true'
+          buttonText: Button
+          dateTimeFormat: MMMM dd, y 'at' ttt
+          header: updatedAt
+          id: 028f2b0a-d015-420a-b833-5009ca0fa830
+          index: 3
+          isVisible: true
+          linkTarget: _blank
+          minWidth: 15
+          minWidthUnit: '%'
+          onButtonClick: null
+          renderAs: date
+          width: '15'
+          widthUnit: '%'
+        - accessor: ''
+          allowSortBy: '{{true}}'
+          buttonText: Edit
+          dateTimeFormat: MMMM dd, y 'at' ttt
+          header: Actions
+          id: 9c754210-6b00-4aeb-8978-ea5dab2d57b6
+          index: 6
+          isVisible: true
+          minWidth: 15
+          minWidthUnit: '%'
+          onButtonClick:
+            function:
+              ref: e8af3fa7-99f2-445a-bc7e-c9a9e26dfafd
+          renderAs: button
+          width: '15'
+          widthUnit: '%'
+        - accessor: key
+          allowSortBy: 'true'
+          buttonText: Button
+          dateTimeFormat: MMMM dd, y 'at' ttt
+          header: key
+          id: cb8b079f-221a-4135-a416-354d8b976002
+          index: 0
+          isVisible: false
+          linkTarget: _blank
+          minWidth: 15
+          minWidthUnit: '%'
+          onButtonClick: null
+          renderAs: default
+          width: 69
+          widthUnit: '%'
+        - accessor: value
+          allowSortBy: 'true'
+          buttonText: Button
+          dateTimeFormat: MMMM dd, y 'at' ttt
+          header: value
+          id: 9202fc34-3481-413d-a457-0feeae94b43a
+          index: 4
+          isVisible: false
+          linkTarget: _blank
+          minWidth: 15
+          minWidthUnit: '%'
+          onButtonClick: null
+          renderAs: default
+          width: 0
+          widthUnit: '%'
+        - accessor: ''
+          allowSortBy: '{{true}}'
+          buttonText: Delete
+          dateTimeFormat: MMMM dd, y 'at' ttt
+          header: ''
+          id: 50d666d6-4639-44f1-8f49-893addb1e955
+          isVisible: true
+          minWidth: 15
+          minWidthUnit: '%'
+          onButtonClick:
+            function:
+              ref: 6c845022-e8e6-4fec-9215-8bb828ffc810
+          renderAs: button
+          width: '15'
+          widthUnit: '%'
+      data: getPublishedPosts.data
+      height: 256px
+      top: '24'
+      width: 100%
+  e046d384-2fcd-4361-9183-abb70b0f73a9:
+    type: BUTTON
+    name: outlineButton1
+    properties:
+      backgroundColor: transparent
+      borderColor: border.300
+      borderRadius: '0'
+      borderWidth: '0'
+      fontSize: lg
+      height: 48px
+      left: NaN
+      onClick:
+        function:
+          ref: 70b4bc6f-1e4e-4bae-9ad8-b95f54e16225
+      styles: |-
+        ::component {
+          border-width: {{ mode.value === 'edit' ? '1px 1px 0px 1px' : '0'}};
+          border-radius: {{ mode.value === 'edit' ? '6px 6px 0px 0px' : '0'}};
+        }
+
+        button:hover {
+          background: transparent;
+        }
+
+        ::wrapper {
+        }
+      text: Write
+      textColor: text.primary
+      top: NaN
+      variant: outlineButton
+      width: 80px
+  e10d6e49-59dc-460b-836d-2894c8c965fc:
+    type: FUNCTION
+    name: listPosts
+    properties:
+      action:
+        actionType: CALL_SERVER_FUNCTION
+        code: |-
+          const posts = await $kv.list()
+
+          return posts.sort((a, b) => (b.value.date > a.value.date ? 1 : -1))
+        targetNode:
+          ref: a49123eb-2413-4c07-8249-687ac02c8786
+      runOnPageLoad: true
+  e8148ba6-f2b3-491c-9e47-e57de5d6d93c:
+    type: CONTAINER
+    name: container9
+    slots:
+      canvas:
+        - nodeID: 57e1d671-bc13-43d4-9380-05ae2f0d656a
+          orderKey: a0
+    properties:
+      alignContent: center
+      backgroundColor: >-
+        {{version.value === 'Draft'? 'yellow.500': version.value === 'Published'
+        ? 'purple.500' : 'red.500'}}
+      boxShadow: '0'
+      clientX: 760.61376953125
+      clientY: 252.77716064453125
+      distributeContent: center
+      gridRows: '1'
+      height: 100%
+      layoutStyle: HORIZONTAL_STACK
+      left: NaN
+      padding: '0'
+      parentNodeID: 5a31842b-a49d-4ea5-aeb0-7f13f289156d
+      top: NaN
+      width: fit
+  e87532d5-8385-43ac-8cac-cd3ba5409d23:
+    type: TEXT
+    name: markdown111
+    properties:
+      top: '2'
+      width: '1'
+      height: 100%
+      value: >-
+        1. Configure your admin account by going to the **Settings** panel and
+        configure a Sign-in Authorization rule.
+
+
+        2. Add an **Allow access rule** where `User email is in` and add in your
+        email such as `your_email@example.com`.
+
+
+        3. Deploy your application.
+      renderMode: markdown
+      verticalAlign: top
+  e8af3fa7-99f2-445a-bc7e-c9a9e26dfafd:
+    type: FUNCTION
+    name: editRowPublished
+    properties:
+      action:
+        actionType: CALL_CLIENT_FUNCTION
+        code: |-
+          const id = {{ dataTable3.selectedRow.key }}
+
+          await redirect(id)
+        targetNode:
+          ref: com.dynaboard.globals:tsclient
+  f15ed1c8-b662-412b-a955-22de51c6db03:
+    type: COMPONENT
+    name: banner
+    slots:
+      canvas:
+        - nodeID: ca83dbb8-955a-45f6-9450-cb5c23a5da02
+          orderKey: a0
+    properties:
+      borderRadius: 6px
+      height: 44px
+      layoutStyle: HORIZONTAL_STACK
+      props:
+        - defaultValue: Notice
+          description: ''
+          id: 0e62928a-c82f-40c8-9117-6efed9e29219
+          key: message
+          propType: string
+      styles: |-
+        element.styles {
+        }
+      width: 800px
+  f2daa312-9ba1-4301-a07c-34a236f09950:
+    type: BUTTON
+    name: saveButton
+    properties:
+      backgroundColor: yellow.600
+      fontSize: md
+      isEnabled: '{{titleInput.value && dateInput.value && bodyInput.value}} '
+      onClick:
+        function:
+          ref: 04cb2e7d-986c-4cc6-b4d9-d4b7d98f1789
+      text: Save Draft
+      textColor: text.primary
+      top: '5'
+      variant: ghostButton
+  f6873f68-0f83-441f-a0dd-1a7621a90ec8:
+    type: CONTAINER
+    name: container4
+    slots:
+      canvas:
+        - nodeID: 8c355f8d-9b8a-4b87-ac23-f37317a5bd21
+          orderKey: a0
+        - nodeID: c7b1f837-7100-4af9-99df-f16b06d9f8d3
+          orderKey: Zz
+    properties:
+      backgroundColor: transparent
+      borderRadius: '0'
+      boxShadow: '0'
+      height: fit
+      layoutStyle: HORIZONTAL_STACK
+      left: NaN
+      padding: '0'
+      styles: |-
+        ::component {
+        }
+
+        ::wrapper {
+          padding: 0px 16px 0px 16px;
+        }
+      top: NaN
+      width: 100%
+  f7d5e9db-8b41-4363-b895-de99056603ce:
+    type: DATA_TABLE
+    name: dataTable1
+    properties:
+      autoColumns: false
+      columns:
+        - accessor: value.title
+          allowSortBy: 'true'
+          buttonText: Button
+          dateTimeFormat: MMMM dd, y 'at' ttt
+          header: title
+          id: 5b6a9ed6-4271-4976-ae6c-42f5d1438c30
+          index: 1
+          isVisible: true
+          linkTarget: _blank
+          minWidth: '40'
+          minWidthUnit: '%'
+          onButtonClick: null
+          renderAs: default
+          width: '40'
+          widthUnit: '%'
+        - accessor: createdAt
+          allowSortBy: 'true'
+          buttonText: Button
+          dateTimeFormat: MMMM dd, y 'at' ttt
+          header: createdAt
+          id: a3ede757-c069-4052-a3f2-7743156c4eeb
+          index: 2
+          isVisible: true
+          linkTarget: _blank
+          minWidth: '15'
+          minWidthUnit: '%'
+          onButtonClick: null
+          renderAs: date
+          width: '15'
+          widthUnit: '%'
+        - accessor: updatedAt
+          allowSortBy: 'true'
+          buttonText: Button
+          dateTimeFormat: MMMM dd, y 'at' ttt
+          header: updatedAt
+          id: 028f2b0a-d015-420a-b833-5009ca0fa830
+          index: 3
+          isVisible: true
+          linkTarget: _blank
+          minWidth: 15
+          minWidthUnit: '%'
+          onButtonClick: null
+          renderAs: date
+          width: '15'
+          widthUnit: '%'
+        - accessor: ''
+          allowSortBy: '{{true}}'
+          buttonText: Edit
+          dateTimeFormat: MMMM dd, y 'at' ttt
+          header: Actions
+          id: 9c754210-6b00-4aeb-8978-ea5dab2d57b6
+          index: 6
+          isVisible: true
+          minWidth: 15
+          minWidthUnit: '%'
+          onButtonClick:
+            function:
+              ref: 569ac839-8194-4691-ab6f-64cf543e910c
+          renderAs: button
+          width: '15'
+          widthUnit: '%'
+        - accessor: ''
+          allowSortBy: '{{true}}'
+          buttonText: Delete
+          dateTimeFormat: MMMM dd, y 'at' ttt
+          header: ''
+          id: b64f4f98-60cb-4f1f-9678-258a795756a8
+          index: 5
+          isVisible: true
+          minWidth: 15
+          minWidthUnit: '%'
+          onButtonClick:
+            function:
+              ref: 07e86897-7afb-4a89-a7f5-15d0c9208b3d
+          renderAs: button
+          width: '15'
+          widthUnit: '%'
+        - accessor: key
+          allowSortBy: 'true'
+          buttonText: Button
+          dateTimeFormat: MMMM dd, y 'at' ttt
+          header: key
+          id: cb8b079f-221a-4135-a416-354d8b976002
+          index: 0
+          isVisible: false
+          linkTarget: _blank
+          minWidth: 15
+          minWidthUnit: '%'
+          onButtonClick: null
+          renderAs: default
+          width: 69
+          widthUnit: '%'
+        - accessor: value
+          allowSortBy: 'true'
+          buttonText: Button
+          dateTimeFormat: MMMM dd, y 'at' ttt
+          header: value
+          id: 9202fc34-3481-413d-a457-0feeae94b43a
+          index: 4
+          isVisible: false
+          linkTarget: _blank
+          minWidth: 15
+          minWidthUnit: '%'
+          onButtonClick: null
+          renderAs: default
+          width: 0
+          widthUnit: '%'
+      data: getPosts.data
+      height: 256px
+      top: '4'
+      width: 100%
+  fd9b7b92-97cc-4070-a681-5af58373c8fb:
+    type: COMPONENT/f15ed1c8-b662-412b-a955-22de51c6db03
+    name: banner1
+    componentRef: f15ed1c8-b662-412b-a955-22de51c6db03
+    properties:
+      width: 100%
+      height: fit
+      $props:
+        message: >-
+          If you do not configure your **admin** account, anyone will be able to
+          sign into your account and have administrative access to all of your
+          blog posts data.
+  ffd61630-619f-4180-a7cb-cbecc161e2b5:
+    type: CONTAINER
+    name: container1
+    slots:
+      canvas:
+        - nodeID: 9ff51cb8-e691-4d29-b75b-68661c83221c
+          orderKey: a0
+        - nodeID: 7d399af5-a221-4280-b9f6-ef030a417fa2
+          orderKey: a2
+        - nodeID: f6873f68-0f83-441f-a0dd-1a7621a90ec8
+          orderKey: a1l
+        - nodeID: 5a2c55be-6c76-4e24-a02c-bb1964f68820
+          orderKey: a1
+    properties:
+      backgroundColor: transparent
+      boxShadow: '0'
+      height: fit
+      layoutStyle: VERTICAL_STACK
+      padding: '0'
+      spacing: '8'
+      styles: |-
+        ::component {
+          border-width: 1px;
+        }
+
+        ::wrapper {
+        }
+      width: 100%
