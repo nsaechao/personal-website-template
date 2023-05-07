@@ -18,6 +18,8 @@ nodes:
           orderKey: Zw
         - nodeID: af5059eb-64f1-4eea-8d43-aa0c2c0a1868
           orderKey: Zv
+        - nodeID: cd3ed80c-7110-4580-87dd-60f7eee642e3
+          orderKey: a0
       config:
         - nodeID: bd0e5ad4-74ff-4366-b4dd-098767afa5d6
           orderKey: a0
@@ -100,10 +102,11 @@ nodes:
       width: '1'
   03bbe7b9-22f5-4135-b522-f4bc9c796e0d:
     type: BUTTON
-    name: button1
+    name: createNewPostButton
     properties:
       isVisible: '{{true}}'
       isEnabled: '{{true}}'
+      tooltip: Create new post
       top: NaN
       left: NaN
       width: 48px
@@ -122,8 +125,33 @@ nodes:
       text: ''
       rightIcon: FilePlusIcon
       fontSize: 4xl
+      backgroundColor: text.accent
       variant: solid
       isLoading: '{{false}}'
+  03f76d0a-a878-41e1-807c-902214056575:
+    type: CONTAINER
+    name: container5
+    slots:
+      canvas:
+        - nodeID: 3c9fa5b0-2a52-4056-bc8a-97d13289d62f
+          orderKey: a1
+    properties:
+      width: '1'
+      height: 100%
+      overflow: hidden
+      styles: |-
+        ::component {
+
+        }
+
+        ::wrapper {
+        }
+      layoutStyle: HORIZONTAL_STACK
+      padding: '0'
+      spacing: '4'
+      boxShadow: '0'
+      borderRadius: '0'
+      distributeContent: end
   04cb2e7d-986c-4cc6-b4d9-d4b7d98f1789:
     type: FUNCTION
     name: handleSave
@@ -145,7 +173,7 @@ nodes:
     properties:
       action:
         actionType: NAVIGATE_TO_PAGE
-        path: '{{$app.baseURL}}/post/{{$currentPage.params.id}}'
+        path: /post/{{$currentPage.params.id}}
         target: _self
         targetNode:
           ref: com.dynaboard.globals:browser
@@ -176,6 +204,7 @@ nodes:
       layoutStyle: VERTICAL_STACK
       spacing: '30'
       title: About
+      alignContent: center
       headerComponent: COMPONENT/9e2730fa-8aff-4461-a581-7f106b1f0714
   074c5e7f-ab35-4e5c-b137-23b989e7c32b:
     type: FUNCTION
@@ -192,38 +221,15 @@ nodes:
       onSuccess:
         function:
           ref: 05d1eeb9-cf12-48f5-b40b-d3fc803899e8
-  07e86897-7afb-4a89-a7f5-15d0c9208b3d:
+  0f00f6b5-6fb2-4618-8e06-4843fcdfb862:
     type: FUNCTION
-    name: deleteRow
+    name: deletePublished
     properties:
       action:
-        actionType: DELETE_RECORD
-        key: '{{dataTable1.selectedRow.key}}'
+        key: '{{$props.key}}'
         targetNode:
-          ref: 9fb5b18f-e398-470d-9a19-031425edbefc
-      onSuccess:
-        function:
-          ref: 58ce3ae3-3288-4791-ba60-09106962d403
-  11f135db-5cfd-4ea2-bbc9-4471b8d0a93e:
-    type: CONTAINER
-    name: container7
-    properties:
-      alignContent: center
-      backgroundColor: >-
-        {{version.value === 'Draft'? 'yellow.500': version.value === 'Published'
-        ? 'purple.500' : 'red.500'}}
-      boxShadow: '0'
-      clientX: 760.61376953125
-      clientY: 252.77716064453125
-      distributeContent: center
-      gridRows: '1'
-      height: 100%
-      layoutStyle: HORIZONTAL_STACK
-      left: NaN
-      padding: '0'
-      parentNodeID: 5a2c55be-6c76-4e24-a02c-bb1964f68820
-      top: NaN
-      width: fit
+          ref: c6c218f0-82ff-45a8-9375-9611dbc3590b
+        actionType: DELETE_RECORD
   1449aa1a-c765-4742-b48c-ef3b94af9723:
     type: FUNCTION
     name: onLoad
@@ -240,6 +246,7 @@ nodes:
             titleInput.value = draftData.title
             dateInput.value = draftData.date
             bodyInput.value = draftData.body
+            iconInput.value = draftData.icon
             return
           }
 
@@ -249,6 +256,7 @@ nodes:
             titleInput.value = postData.title
             dateInput.value = postData.date
             bodyInput.value = postData.body
+            iconInput.value = postData.icon
             return
           }
 
@@ -329,7 +337,7 @@ nodes:
         actionType: CALL_CLIENT_FUNCTION
         code: |-
           const id = $crypto.randomUUID()
-          await redirect(id)
+          await redirectNewPost(id)
         targetNode:
           ref: com.dynaboard.globals:tsclient
   1e98d3d6-c276-4d08-aee0-db0ec8a9b766:
@@ -346,6 +354,21 @@ nodes:
       top: '5'
       variant: ghostButton
       width: 103px
+  2382de36-0ddc-4b14-a0c4-36db67532bf3:
+    type: FUNCTION
+    name: onDeleteClick
+    properties:
+      action:
+        code: |-
+          preventDefault.value = true
+          await openDeleteDialog()
+
+          setTimeout(() => {
+            preventDefault.value = false
+          }, 300)
+        targetNode:
+          ref: com.dynaboard.globals:tsclient
+        actionType: CALL_CLIENT_FUNCTION
   24094dfe-2f15-4054-a311-cd0afb800977:
     type: TEXT
     name: markdown11111
@@ -370,20 +393,11 @@ nodes:
       borderRadius: '0'
       boxShadow: '0'
       component: COMPONENT/484476ad-5f4e-4183-a8f2-04ba1dfccc66
-      data: |-
-        listPosts.data
-          .map((d) => {
-            return {
-              url: `${$app.baseURL}/post/${d.key}`,
-              date: d.value.date,
-              title: `${d.value.title}`,
-            }
-          })
-          .sort()
+      data: listPosts.data
       height: fit
       overflow: hidden
       padding: '0'
-      spacing: '4'
+      spacing: '8'
       width: 100%
       wrapContent: wrap
   24571e40-5e3e-47df-a79e-2ec5ed139253:
@@ -395,6 +409,16 @@ nodes:
         targetNode:
           ref: 41de9b9f-f60e-4899-9a27-d5e778411117
         actionType: SIGN_OUT
+  251d73aa-3a39-42bf-a741-2755b61c585c:
+    type: FUNCTION
+    name: redirectNewPost
+    properties:
+      action:
+        path: '{{$app.baseURL}}/edit/{{$args[0]}}'
+        target: _self
+        targetNode:
+          ref: com.dynaboard.globals:browser
+        actionType: NAVIGATE_TO_PAGE
   28687b12-51df-45e7-af10-0e4bdbe9a6e3:
     type: SPINNER
     name: spinner1
@@ -411,6 +435,15 @@ nodes:
       renderMode: markdown
       value: '{{$props.date}}'
       width: fit
+  2dd0d6ae-ff62-4b5e-8fcb-41e8994817c0:
+    type: TEXT
+    name: text3
+    properties:
+      width: 12
+      height: 16
+      value: '{{$props.icon}}'
+      fontSize: 30px
+      textAlign: center
   2fcc4817-2046-4516-981d-7c91771a42e1:
     type: CONTAINER
     name: iconContainer
@@ -436,7 +469,7 @@ nodes:
     type: TEXT
     name: markdown1
     properties:
-      height: 60px
+      height: auto
       renderMode: markdown
       textAlign: center
       value: '## Administrator Login'
@@ -477,8 +510,8 @@ nodes:
 
 
         This is a modern and customizable template for a personal website that
-        features a responsive design, easy navigation, and sections for your
-        bio, skills, portfolio, and blog. 
+        features a responsive design, easy navigation, and easy to add sections
+        for your bio, skills, portfolio, and blog. 
       renderMode: markdown
   35409356-a37a-4e24-a43d-669b080bc6c6:
     type: PAGE
@@ -521,6 +554,8 @@ nodes:
           orderKey: a1
         - nodeID: 780c952b-f33a-49e6-b7cb-307edaa13e47
           orderKey: a2
+        - nodeID: 65097c5b-eef4-44ce-8f60-89e99fbb2516
+          orderKey: a3
     properties:
       authorizationRules: |-
         [
@@ -569,16 +604,18 @@ nodes:
         {{`${Math.min(parseInt($currentPage.maxWidth), $app.viewportWidth) -
         (parseInt($currentPage.padding) * 2)}px`}}
       spacing: '0'
-  3738b964-dee8-4d87-9368-5a2e781ee488:
-    type: TEXT
-    name: text3
+  3c9fa5b0-2a52-4056-bc8a-97d13289d62f:
+    type: BUTTON
+    name: deleteButton
     properties:
-      fontSize: 2xl
-      fontWeight: '600'
-      left: NaN
-      top: NaN
-      value: Published
-      width: '1'
+      width: 60px
+      height: 100%
+      text: Delete
+      fontSize: md
+      backgroundColor: red.600
+      onClick:
+        function:
+          ref: 2382de36-0ddc-4b14-a0c4-36db67532bf3
   3e078026-3a93-41d0-a504-b93c205ed53a:
     type: BUTTON
     name: outlineButton11
@@ -611,6 +648,61 @@ nodes:
       top: NaN
       variant: outlineButton
       width: 80px
+  3e7802e3-bfc1-42e4-8823-c17fec536536:
+    type: FUNCTION
+    name: onLoad
+    properties:
+      action:
+        actionType: CALL_CLIENT_FUNCTION
+        code: |-
+          await getUserEmail()
+          const draftData = (await loadDraft()).map((d) => {
+            return {
+              ...d,
+              value: {
+                ...d.value,
+                status: "Draft",
+                lastUpdated: d.value.date,
+              },
+            }
+          })
+
+          const postData = (await loadProd()).map((d) => {
+            return {
+              ...d,
+              value: {
+                ...d.value,
+                status: "Published",
+                lastUpdated: d.value.date,
+              },
+            }
+          })
+
+          const dataMap = new Map<string, any>()
+
+          const data = [...draftData, ...postData].reduce((acc, d) => {
+            const existing = acc.get(d.key)
+            if (existing) {
+              existing.status = "Published-Draft"
+              if (d.value.status === "Draft") {
+                existing.title === d.value.title
+                existing.lastUpdated = d.value.lastUpdated
+              }
+            } else {
+              acc.set(d.key, d.value)
+            }
+            return acc
+          }, dataMap)
+
+          return [...data].map(([key, value]) => {
+            return {
+              key,
+              ...value,
+            }
+          })
+        targetNode:
+          ref: com.dynaboard.globals:tsclient
+      runOnPageLoad: true
   3e7bf6ee-f305-463f-b824-71aacd34d338:
     type: RESOURCE/ONE_TIME_PIN_AUTH
     name: OneTimePinAuth1
@@ -650,9 +742,37 @@ nodes:
             },
           },
         ]
+  3fb48859-8dbd-462f-862f-fef24ea2ca3f:
+    type: FUNCTION
+    name: loadProd
+    properties:
+      action:
+        pattern: ''
+        targetNode:
+          ref: c6c218f0-82ff-45a8-9375-9611dbc3590b
+        actionType: LIST_RECORDS
+  41529f73-dcef-44bd-acc9-f853022f02cf:
+    type: FUNCTION
+    name: getUserEmail
+    properties:
+      action:
+        accessor: email
+        targetNode:
+          ref: 41de9b9f-f60e-4899-9a27-d5e778411117
+        actionType: GET_SESSION
   41de9b9f-f60e-4899-9a27-d5e778411117:
     type: RESOURCE/USER_SESSION
     name: UserSession1
+  45ca1fb3-849a-4383-9b4e-5e08bd32f823:
+    type: FUNCTION
+    name: redirect
+    properties:
+      action:
+        actionType: NAVIGATE_TO_PAGE
+        path: '{{$app.baseURL}}/edit/{{$args[0]}}'
+        target: _self
+        targetNode:
+          ref: com.dynaboard.globals:browser
   477dabd1-ffa7-4af4-b459-67d85f300c9f:
     type: TEXT
     name: descriptionText
@@ -676,7 +796,7 @@ nodes:
         - nodeID: a7628013-93f5-4970-bf2a-d957377996e5
           orderKey: a0
     properties:
-      height: 40px
+      height: fit
       layoutStyle: VERTICAL_STACK
       props:
         - defaultValue: YYYY-MM-DD
@@ -684,7 +804,9 @@ nodes:
           id: 9f578b3d-bf6a-4ee2-9c8d-f4d8b83c290e
           key: date
           propType: string
-        - defaultValue: Hello World
+        - defaultValue: >-
+            Show HN: Mini-spend-tracker – a self-hosted server for tracking your
+            spendings 
           description: ''
           id: e881f1fd-315f-40fa-bf3f-dfbd53f19641
           key: title
@@ -695,7 +817,7 @@ nodes:
           key: url
           propType: string
       spacing: '0'
-      width: 226px
+      width: 100%
   48cf3df4-1abc-45a5-ac94-f2ab425561d4:
     type: TEXT
     name: markdown11
@@ -734,7 +856,7 @@ nodes:
       action:
         actionType: CALL_SERVER_FUNCTION
         code: |-
-          const id = {{$currentPage.params.id}}
+          const id = {{ $currentPage.params.id }}
 
           const title = {{ titleInput.value }}
 
@@ -742,7 +864,10 @@ nodes:
 
           const date = {{ dateInput.value }}
 
-          const value = { title, date, body }
+          const icon = {{ iconInput.value }}
+
+          const value = { title, date, body, icon }
+
           return $kv.set(id, value)
         targetNode:
           ref: cee57770-028b-405c-a743-7a0a1dfe0500
@@ -1129,7 +1254,7 @@ nodes:
       width: '1'
   50758d27-1a38-4b15-8a48-3fc6fa6268ef:
     type: CONTAINER
-    name: container1
+    name: draftHeader
     slots:
       canvas:
         - nodeID: 60e328a3-b6b3-4fda-b860-8338d5b3cf62
@@ -1145,46 +1270,22 @@ nodes:
       layoutStyle: HORIZONTAL_STACK
       width: 100%
       padding: '0'
-  569ac839-8194-4691-ab6f-64cf543e910c:
-    type: FUNCTION
-    name: editRow
-    properties:
-      action:
-        actionType: CALL_CLIENT_FUNCTION
-        code: |-
-          const id = {{ dataTable1.selectedRow.key }}
-
-          await redirect(id)
-        targetNode:
-          ref: com.dynaboard.globals:tsclient
   57e1d671-bc13-43d4-9380-05ae2f0d656a:
     type: TEXT
     name: text3
     properties:
-      color: '#FFF'
+      color: '#000000FF'
       fontWeight: '600'
       left: NaN
       textAlign: center
       top: NaN
       value: '{{version.value ?? ''New''}}'
       width: 80px
-  58ce3ae3-3288-4791-ba60-09106962d403:
-    type: FUNCTION
-    name: getPosts
-    properties:
-      action:
-        actionType: CALL_SERVER_FUNCTION
-        code: return $kv.list()
-        targetNode:
-          ref: cee57770-028b-405c-a743-7a0a1dfe0500
-      callingSemantics: REACTIVE
   5a2c55be-6c76-4e24-a02c-bb1964f68820:
     type: CONTAINER
     name: container6
     slots:
       canvas:
-        - nodeID: 11f135db-5cfd-4ea2-bbc9-4471b8d0a93e
-          orderKey: a1
         - nodeID: 6cb80eed-8ddc-4af9-9c37-d9b6401e1cac
           orderKey: a0
     properties:
@@ -1192,7 +1293,6 @@ nodes:
       backgroundColor: transparent
       borderRadius: '0'
       boxShadow: '0'
-      distributeContent: between
       height: 32px
       isVisible: '{{ mode.value === "edit" }}'
       layoutStyle: HORIZONTAL_STACK
@@ -1248,7 +1348,11 @@ nodes:
         published and draft posts.
 
 
-        ***Draft posts are not visible to your visitors.***
+        The admin page is visible in the Dynaboard editor even if you are not
+        logged in for convenience noted by the **\***.
+
+
+        ***Note: Draft posts are not visible to your visitors.***
       renderMode: markdown
       verticalAlign: top
   608a88db-cca5-4c7c-928d-6a9d44cb5017:
@@ -1279,26 +1383,21 @@ nodes:
       width: 150px
   60e328a3-b6b3-4fda-b860-8338d5b3cf62:
     type: TEXT
-    name: text1
+    name: draftTitle
     properties:
       fontSize: 2xl
       fontWeight: '600'
       left: NaN
       top: NaN
-      value: Drafts
+      value: Posts
       width: '1'
       verticalAlign: bottom
       height: 100%
-  626ba64b-dfa7-465f-bbdc-0517666bb814:
-    type: FUNCTION
-    name: redirect
+  65097c5b-eef4-44ce-8f60-89e99fbb2516:
+    type: LOCAL_VARIABLE
+    name: icon
     properties:
-      action:
-        actionType: NAVIGATE_TO_PAGE
-        path: '{{$app.baseURL}}/edit/{{$args[0]}}'
-        target: _self
-        targetNode:
-          ref: com.dynaboard.globals:browser
+      value: ''''''
   683ef21d-c39b-486c-abd2-d99c4d8fa080:
     type: FUNCTION
     name: publishPost
@@ -1306,7 +1405,7 @@ nodes:
       action:
         actionType: CALL_SERVER_FUNCTION
         code: |-
-          const id = {{$currentPage.params.id}}
+          const id = {{ $currentPage.params.id }}
 
           const title = {{ titleInput.value }}
 
@@ -1314,7 +1413,9 @@ nodes:
 
           const date = {{ dateInput.value }}
 
-          const value = { title, date, body }
+          const icon = {{ iconInput.value }}
+
+          const value = { title, date, body, icon }
           return $kv.set(id, value)
         targetNode:
           ref: a49123eb-2413-4c07-8249-687ac02c8786
@@ -1333,18 +1434,6 @@ nodes:
       text: Publish
       top: '5'
       variant: solid
-  6c845022-e8e6-4fec-9215-8bb828ffc810:
-    type: FUNCTION
-    name: deleteProdRow
-    properties:
-      action:
-        actionType: DELETE_RECORD
-        key: '{{dataTable3.selectedRow.key}}'
-        targetNode:
-          ref: c6c218f0-82ff-45a8-9375-9611dbc3590b
-      onSuccess:
-        function:
-          ref: 802310c7-75c8-4fea-9303-54ad4f1f3090
   6cb80eed-8ddc-4af9-9c37-d9b6401e1cac:
     type: INPUT
     name: dateInput
@@ -1354,6 +1443,17 @@ nodes:
       top: NaN
       type: date
       width: 121px
+  6db81f72-567c-4545-bb9d-cad1ab75aaf4:
+    type: INPUT
+    name: iconInput
+    properties:
+      isVisible: '{{titleMode.value === ''edit''}}'
+      label: ''
+      labelStyle: top
+      left: NaN
+      top: NaN
+      type: text
+      width: 32px
   6dc45113-0b1c-49d0-9043-290efe4a6e43:
     type: SPINNER
     name: spinner1
@@ -1386,6 +1486,35 @@ nodes:
       top: NaN
       value: 💡
       width: 100%
+  769e2538-40c8-4bd2-aa68-71d4b12271d1:
+    type: FUNCTION
+    name: closeThisDialog
+    properties:
+      action:
+        isVisible: true
+        isEnabled: true
+        tooltip: ''
+        top: '1'
+        left: '1'
+        width: 128px
+        minWidth: ''
+        maxWidth: ''
+        height: 32px
+        minHeight: ''
+        maxHeight: ''
+        overflow: auto
+        overflowX: auto
+        overflowY: auto
+        styles: |-
+          ::component {
+          }
+
+          ::wrapper {
+          }
+        objectFit: cover
+        targetNode:
+          ref: com.dynaboard.globals:browser
+        actionType: CLOSE_DIALOG
   780c952b-f33a-49e6-b7cb-307edaa13e47:
     type: LOCAL_VARIABLE
     name: version
@@ -1406,6 +1535,14 @@ nodes:
       height: 64px
       layoutStyle: HORIZONTAL_STACK
       spacing: 8px
+      width: 100%
+  7d7e81ff-c07b-474f-b1ce-6c432fce0e5a:
+    type: SPINNER
+    name: spinner1
+    properties:
+      color: blue.400
+      isVisible: '{{onLoad.loading}}'
+      size: lg
       width: 100%
   7ee23309-6b63-43de-8bce-608aa2ce696f:
     type: TEXT
@@ -1567,23 +1704,24 @@ nodes:
         # {{getPost.data?.title ?? ''}}
         `{{getPost.data?.date || ' '}}`
       width: 100%
-  802310c7-75c8-4fea-9303-54ad4f1f3090:
-    type: FUNCTION
-    name: getPublishedPosts
-    properties:
-      action:
-        actionType: LIST_RECORDS
-        pattern: ''
-        targetNode:
-          ref: c6c218f0-82ff-45a8-9375-9611dbc3590b
-      callingSemantics: REACTIVE
-  86fe6bc9-9144-4c91-b3fd-53c697b0c344:
+  8560b5ab-b06d-4ce1-8ef4-6878fb97e94d:
     type: CONTAINER
     name: container2
     slots:
       canvas:
-        - nodeID: 3738b964-dee8-4d87-9368-5a2e781ee488
-          orderKey: Zz
+        - nodeID: 2dd0d6ae-ff62-4b5e-8fcb-41e8994817c0
+          orderKey: a0
+    properties:
+      width: 60px
+      height: 100%
+      overflow: hidden
+      padding: '0'
+      backgroundColor: '{{ $props.status === "Published" ? "purple.200" : "yellow.200" }}'
+      boxShadow: '0'
+      borderRadius: '0'
+  86fe6bc9-9144-4c91-b3fd-53c697b0c344:
+    type: CONTAINER
+    name: publishedHeader
     properties:
       alignContent: center
       backgroundColor: transparent
@@ -1593,44 +1731,6 @@ nodes:
       layoutStyle: HORIZONTAL_STACK
       width: 100%
       padding: '0'
-  8acbb508-8d23-4178-aca9-41c09bf09bdd:
-    type: FUNCTION
-    name: openDeleteDraftDialog
-    properties:
-      action:
-        isVisible: true
-        isEnabled: true
-        tooltip: ''
-        top: '1'
-        left: '1'
-        width: 128px
-        minWidth: ''
-        maxWidth: ''
-        height: 32px
-        minHeight: ''
-        maxHeight: ''
-        overflow: auto
-        overflowX: auto
-        overflowY: auto
-        styles: |-
-          ::component {
-          }
-
-          ::wrapper {
-          }
-        objectFit: cover
-        component: COMPONENT/com.dynaboard.dialogs:392d67de-c55b-47ba-883b-1f779efceaa2
-        componentProps:
-          headerText: Delete draft
-          bodyText: >-
-            Are you sure you want to permanent delete this post? This cannot be
-            undone.
-          onSubmit:
-            ref: 07e86897-7afb-4a89-a7f5-15d0c9208b3d
-        isDismissible: true
-        targetNode:
-          ref: com.dynaboard.globals:browser
-        actionType: OPEN_DIALOG
   8bd862bb-1955-4f4a-a5e4-94b946aafdf3:
     type: COMPONENT/8c60717e-5d56-415e-9bfb-f184ae931938
     name: CustomTabNavItem3
@@ -1641,7 +1741,7 @@ nodes:
       height: 64px
       $props:
         orientation: row
-        title: Admin{{$app.mode === 'editor' && '*'}}
+        title: 'Admin{{ $app.mode === "editor" ? "*" : "" }}'
         href: /admin
         isActive: '{{$currentPage.nodeName === ''admin''}}'
         totalItems: ''
@@ -1675,6 +1775,7 @@ nodes:
         {{bodyInput.value}}
       verticalAlign: top
       width: '1'
+      minHeight: 440px
   8c60717e-5d56-415e-9bfb-f184ae931938:
     type: COMPONENT
     name: CustomTabNavItem
@@ -1946,7 +2047,7 @@ nodes:
       backgroundColor: transparent
       borderRadius: 0px
       boxShadow: '0'
-      height: '1'
+      height: fit
       layoutStyle: HORIZONTAL_STACK
       left: NaN
       onClick:
@@ -1975,6 +2076,23 @@ nodes:
       top: NaN
       type: text
       width: '1'
+      placeholder: Add a title here
+  958a79bf-4f44-4b1b-832a-d30603e0f2c0:
+    type: MEDIA
+    name: media1
+    properties:
+      alt: 🤖
+      height: 150px
+      left: NaN
+      objectFit: contain
+      styles: |-
+        img {
+          border-radius: 100%;
+        }
+      top: NaN
+      type: image
+      url: '{{profileImageURL.value}}'
+      width: 150px
   97c50cb7-8330-4b3a-a116-c9589ea24fb4:
     type: PAGE
     name: login
@@ -1984,6 +2102,8 @@ nodes:
           orderKey: Zy
         - nodeID: 30bce4a0-aa80-4327-a773-d042580f9875
           orderKey: ZxV
+        - nodeID: 958a79bf-4f44-4b1b-832a-d30603e0f2c0
+          orderKey: Zxl
     properties:
       authorizationRules: |-
         [
@@ -2019,6 +2139,7 @@ nodes:
       includeInSitemap: false
       layoutStyle: VERTICAL_STACK
       headerComponent: COMPONENT/9e2730fa-8aff-4461-a581-7f106b1f0714
+      alignContent: center
   9a4a328d-40c6-49b6-a116-95d53ad681a4:
     type: SIGN-IN
     name: signIn1
@@ -2092,44 +2213,6 @@ nodes:
         ::wrapper {
         }
       width: 100%
-  a125e03b-ec04-417a-8369-22526f5b5709:
-    type: FUNCTION
-    name: openDeleteProdDialog
-    properties:
-      action:
-        isVisible: true
-        isEnabled: true
-        tooltip: ''
-        top: '1'
-        left: '1'
-        width: 128px
-        minWidth: ''
-        maxWidth: ''
-        height: 32px
-        minHeight: ''
-        maxHeight: ''
-        overflow: auto
-        overflowX: auto
-        overflowY: auto
-        styles: |-
-          ::component {
-          }
-
-          ::wrapper {
-          }
-        objectFit: cover
-        component: COMPONENT/com.dynaboard.dialogs:392d67de-c55b-47ba-883b-1f779efceaa2
-        componentProps:
-          headerText: Delete post
-          bodyText: >-
-            Are you sure you want to permanent delete this post? This cannot be
-            undone.
-          onSubmit:
-            ref: 6c845022-e8e6-4fec-9215-8bb828ffc810
-        isDismissible: true
-        targetNode:
-          ref: com.dynaboard.globals:browser
-        actionType: OPEN_DIALOG
   a4108a86-40ea-4df7-ab6f-87fb3483da84:
     type: FUNCTION
     name: onPreview
@@ -2208,41 +2291,35 @@ nodes:
     name: admin
     slots:
       canvas:
-        - nodeID: f7d5e9db-8b41-4363-b895-de99056603ce
-          orderKey: ZyV
-        - nodeID: d647c080-9503-4f31-96d6-6c565b11f9c8
-          orderKey: Zzp
         - nodeID: 50758d27-1a38-4b15-8a48-3fc6fa6268ef
           orderKey: Zv
         - nodeID: 86fe6bc9-9144-4c91-b3fd-53c697b0c344
           orderKey: Zz
         - nodeID: b46a72f6-8c6e-4e06-8365-d845569249a0
           orderKey: Zu
-      functions:
-        - nodeID: 58ce3ae3-3288-4791-ba60-09106962d403
+        - nodeID: c6b0fe92-f0d7-49e4-b43c-9a1eb0bba4b1
           orderKey: a0
-        - nodeID: 07e86897-7afb-4a89-a7f5-15d0c9208b3d
-          orderKey: a1
-        - nodeID: 626ba64b-dfa7-465f-bbdc-0517666bb814
-          orderKey: a2
+        - nodeID: 7d7e81ff-c07b-474f-b1ce-6c432fce0e5a
+          orderKey: Zw
+      functions:
         - nodeID: 1a3ed884-09e1-47cc-849e-feebd90d4df7
           orderKey: a3
-        - nodeID: 569ac839-8194-4691-ab6f-64cf543e910c
-          orderKey: a4
-        - nodeID: 802310c7-75c8-4fea-9303-54ad4f1f3090
-          orderKey: a5
-        - nodeID: e8af3fa7-99f2-445a-bc7e-c9a9e26dfafd
-          orderKey: a6
         - nodeID: 6c845022-e8e6-4fec-9215-8bb828ffc810
           orderKey: a7
         - nodeID: 24571e40-5e3e-47df-a79e-2ec5ed139253
           orderKey: a8
-        - nodeID: 608a88db-cca5-4c7c-928d-6a9d44cb5017
-          orderKey: a9
-        - nodeID: a125e03b-ec04-417a-8369-22526f5b5709
-          orderKey: aA
         - nodeID: 8acbb508-8d23-4178-aca9-41c09bf09bdd
           orderKey: aB
+        - nodeID: 3e7802e3-bfc1-42e4-8823-c17fec536536
+          orderKey: aCG
+        - nodeID: c8186f98-eec1-4c0d-ad83-db67e6b2afe7
+          orderKey: aCV
+        - nodeID: 3fb48859-8dbd-462f-862f-fef24ea2ca3f
+          orderKey: aD
+        - nodeID: 251d73aa-3a39-42bf-a741-2755b61c585c
+          orderKey: aE
+        - nodeID: 41529f73-dcef-44bd-acc9-f853022f02cf
+          orderKey: aF
     properties:
       authorizationRules: |-
         [
@@ -2279,6 +2356,61 @@ nodes:
       layoutStyle: VERTICAL_STACK
       title: Posts
       headerComponent: COMPONENT/9e2730fa-8aff-4461-a581-7f106b1f0714
+  b12e7ac1-8d16-4093-91d7-ecb4215ca8b4:
+    type: TEXT
+    name: markdown2
+    properties:
+      isVisible: '{{titleMode.value === ''preview''}}'
+      top: NaN
+      left: NaN
+      width: fit
+      height: 48px
+      value: '### {{iconInput.value}}'
+      renderMode: markdown
+      fontWeight: ''
+  b3dcb319-8a63-429e-a23f-3783662a43e9:
+    type: FUNCTION
+    name: openDeleteDialog
+    properties:
+      action:
+        isVisible: true
+        isEnabled: true
+        tooltip: ''
+        top: '1'
+        left: '1'
+        width: 128px
+        minWidth: ''
+        maxWidth: ''
+        height: 32px
+        minHeight: ''
+        maxHeight: ''
+        overflow: auto
+        overflowX: auto
+        overflowY: auto
+        styles: |-
+          ::component {
+          }
+
+          ::wrapper {
+          }
+        objectFit: cover
+        component: COMPONENT/com.dynaboard.dialogs:392d67de-c55b-47ba-883b-1f779efceaa2
+        componentProps:
+          bodyText: >-
+            Are you sure you want to permanent delete this {{$props.status ===
+            'Published'? 'post' : 'draft' }}?
+
+            {{$props.status !== 'Published'? 'This will not delete your
+            published post.' : '' }}
+          headerText: 'Delete {{$props.status === ''Published''? ''Post'' : ''Draft'' }}'
+          onClose:
+            ref: 769e2538-40c8-4bd2-aa68-71d4b12271d1
+          onSubmit:
+            ref: fe5cb190-84fa-4e0f-abd9-d4ea3c25d8d1
+        isDismissible: true
+        targetNode:
+          ref: com.dynaboard.globals:browser
+        actionType: OPEN_DIALOG
   b46a72f6-8c6e-4e06-8365-d845569249a0:
     type: BUTTON
     name: signOutButton
@@ -2290,6 +2422,40 @@ nodes:
           ref: 24571e40-5e3e-47df-a79e-2ec5ed139253
       text: Sign Out
       backgroundColor: red.600
+  b5c1df39-e388-40c7-adbb-d02eb28d19c5:
+    type: CONTAINER
+    name: container4
+    slots:
+      canvas:
+        - nodeID: b8c8364b-42ca-4da4-acd2-5f961ea4b595
+          orderKey: a1
+        - nodeID: 03f76d0a-a878-41e1-807c-902214056575
+          orderKey: a3
+    properties:
+      width: 100%
+      height: fitt
+      overflow: hidden
+      styles: |-
+        ::component {
+          padding-bottom: 8px;
+          padding-right: 8px;
+        }
+
+        ::wrapper {
+        }
+      layoutStyle: HORIZONTAL_STACK
+      padding: '0'
+      spacing: '4'
+      boxShadow: '0'
+      borderRadius: '0'
+  b8c8364b-42ca-4da4-acd2-5f961ea4b595:
+    type: TEXT
+    name: text4
+    properties:
+      width: fit
+      height: 100%
+      value: '{{$props.lastUpdated}}'
+      color: text.muted
   bd0e5ad4-74ff-4366-b4dd-098767afa5d6:
     type: CONFIG
     name: profileImageURL
@@ -2342,7 +2508,12 @@ nodes:
           orderKey: Zz
         - nodeID: 502ad6de-6f1f-402b-bcfb-fd7103e6e0cd
           orderKey: Zy
+        - nodeID: b12e7ac1-8d16-4093-91d7-ecb4215ca8b4
+          orderKey: Zx
+        - nodeID: 6db81f72-567c-4545-bb9d-cad1ab75aaf4
+          orderKey: ZyV
     properties:
+      padding: '0'
       alignContent: center
       backgroundColor: transparent
       boxShadow: '0'
@@ -2351,6 +2522,57 @@ nodes:
       layoutStyle: HORIZONTAL_STACK
       spacing: '8'
       width: 100%
+  c2bb2efe-10be-4cb4-b2fb-72b495bb424c:
+    type: TEXT
+    name: text1
+    properties:
+      width: 100%
+      height: fit
+      styles: |-
+        ::component {
+          padding-top: 8px;
+          padding-right: 8px;
+        }
+
+        ::wrapper {
+        }
+      value: '{{$props.title}}'
+      fontSize: lg
+      fontWeight: '600'
+  c3d25421-a179-46d2-9a8b-a3fd16f6d684:
+    type: CONTAINER
+    name: container1
+    slots:
+      canvas:
+        - nodeID: 8560b5ab-b06d-4ce1-8ef4-6878fb97e94d
+          orderKey: Zy
+        - nodeID: da7fe350-6083-4b52-88d8-e3ce8c5e049c
+          orderKey: ZyG
+    properties:
+      width: 100%
+      height: fit
+      styles: |-
+        ::component {
+          border-width: 2px;
+          border-color: border.300;
+          :hover {
+            border-color: {{ $props.status === "Published" ? "purple.200" : "yellow.200" }};
+            box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.4);
+            transform: scale(1.01, 1.01);
+            transition: all 0.2s ease-in-out;
+          }
+        }
+
+        ::wrapper {
+        }
+      onClick:
+        function:
+          ref: f9c63695-a040-4939-b7b9-5b1f9dcb5dc0
+      layoutStyle: HORIZONTAL_STACK
+      padding: '0'
+      boxShadow: '0'
+      borderRadius: 8px
+      alignContent: center
   c4eef9eb-72db-4d69-af19-e5eabd6b7bce:
     type: FUNCTION
     name: toggleTitleMode
@@ -2365,6 +2587,26 @@ nodes:
           }
         targetNode:
           ref: com.dynaboard.globals:tsclient
+  c6b0fe92-f0d7-49e4-b43c-9a1eb0bba4b1:
+    type: ITERATOR
+    name: iterator1
+    properties:
+      width: 100%
+      height: fit
+      data: |-
+        onLoad.data.map((d) => {
+          return {
+            ...d,
+            deleteCallback: async () => {
+              await onLoad()
+            },
+          }
+        })
+      component: COMPONENT/cd3ed80c-7110-4580-87dd-60f7eee642e3
+      padding: '0'
+      spacing: '0'
+      backgroundColor: transparent
+      boxShadow: '0'
   c6c218f0-82ff-45a8-9375-9611dbc3590b:
     type: RESOURCE/KVSTORE
     name: KVStoreProd
@@ -2389,6 +2631,16 @@ nodes:
         }
       type: textAreaInput
       width: '1'
+      placeholder: Start typing your blog post here...
+  c8186f98-eec1-4c0d-ad83-db67e6b2afe7:
+    type: FUNCTION
+    name: loadDraft
+    properties:
+      action:
+        pattern: ''
+        targetNode:
+          ref: 9fb5b18f-e398-470d-9a19-031425edbefc
+        actionType: LIST_RECORDS
   ca83dbb8-955a-45f6-9450-cb5c23a5da02:
     type: CONTAINER
     name: bannerContainer
@@ -2412,6 +2664,90 @@ nodes:
           border-color: {{$app.colorMode === 'dark' ? "#FFFCF9" : "#FED7AA"}};
         }
       width: 100%
+  cc250f66-34ad-4483-b1bc-b982c7b9ab2b:
+    type: FUNCTION
+    name: afterDelete
+    properties:
+      action:
+        code: |-
+          if($props.deleteCallback) {
+            await $props.deleteCallback()
+          }
+        targetNode:
+          ref: com.dynaboard.globals:tsclient
+        actionType: CALL_CLIENT_FUNCTION
+  cd3ed80c-7110-4580-87dd-60f7eee642e3:
+    type: COMPONENT
+    name: postComponent
+    slots:
+      canvas:
+        - nodeID: c3d25421-a179-46d2-9a8b-a3fd16f6d684
+          orderKey: a0
+      functions:
+        - nodeID: 45ca1fb3-849a-4383-9b4e-5e08bd32f823
+          orderKey: a0
+        - nodeID: f9c63695-a040-4939-b7b9-5b1f9dcb5dc0
+          orderKey: a1
+        - nodeID: b3dcb319-8a63-429e-a23f-3783662a43e9
+          orderKey: a2
+        - nodeID: 0f00f6b5-6fb2-4618-8e06-4843fcdfb862
+          orderKey: a3
+        - nodeID: e781d407-b389-4652-9878-e890dbbec2bf
+          orderKey: a4
+        - nodeID: fe5cb190-84fa-4e0f-abd9-d4ea3c25d8d1
+          orderKey: a5
+        - nodeID: 2382de36-0ddc-4b14-a0c4-36db67532bf3
+          orderKey: a6
+        - nodeID: 769e2538-40c8-4bd2-aa68-71d4b12271d1
+          orderKey: a7
+        - nodeID: cc250f66-34ad-4483-b1bc-b982c7b9ab2b
+          orderKey: a8
+      variables:
+        - nodeID: fb788cfa-7fb3-40c6-bd3d-91c7193f3905
+          orderKey: a0
+    properties:
+      height: fit
+      width: 100%
+      layoutStyle: VERTICAL_STACK
+      alignContent: center
+      padding: '16'
+      styles: |-
+        ::component {
+        }
+
+        ::wrapper {;
+        }
+      props:
+        - id: 2c914079-9c83-4eb6-ac17-b697ee12e876
+          key: key
+          description: ''
+          propType: string
+          defaultValue: ''
+        - id: 82c92ed1-cb36-472c-a5d4-0bd3c9218ddd
+          key: icon
+          description: ''
+          propType: string
+          defaultValue: 🎁
+        - id: 2f16f62e-d880-45fd-a814-d4dc13950698
+          key: title
+          description: ''
+          propType: string
+          defaultValue: Hello World
+        - id: bea69d31-f7de-452c-af69-6c10c5055d9d
+          key: status
+          description: ''
+          propType: string
+          defaultValue: Published
+        - id: 8bf2c3d2-d3fc-4ac2-acd8-9699009b241a
+          key: lastUpdated
+          description: ''
+          propType: string
+          defaultValue: May 5th
+        - id: f55efb10-61e3-4fc9-8314-2c86b8d8465b
+          key: deleteCallback
+          description: ''
+          propType: function
+          defaultValue: ''
   ce29611e-93d0-4a37-a5db-cb6de9d32268:
     type: TEXT
     name: emojiIcon
@@ -2487,122 +2823,22 @@ nodes:
             }
           }
         }
-  d647c080-9503-4f31-96d6-6c565b11f9c8:
-    type: DATA_TABLE
-    name: dataTable3
+  da7fe350-6083-4b52-88d8-e3ce8c5e049c:
+    type: CONTAINER
+    name: container3
+    slots:
+      canvas:
+        - nodeID: c2bb2efe-10be-4cb4-b2fb-72b495bb424c
+          orderKey: Zz
+        - nodeID: b5c1df39-e388-40c7-adbb-d02eb28d19c5
+          orderKey: ZzV
     properties:
-      autoColumns: false
-      columns:
-        - accessor: value.title
-          allowSortBy: 'true'
-          buttonText: Button
-          dateTimeFormat: MMMM dd, y 'at' ttt
-          header: Title
-          id: 5b6a9ed6-4271-4976-ae6c-42f5d1438c30
-          index: 1
-          isVisible: true
-          linkTarget: _blank
-          minWidth: '40'
-          minWidthUnit: '%'
-          onButtonClick: null
-          renderAs: default
-          width: '40'
-          widthUnit: '%'
-        - accessor: createdAt
-          allowSortBy: 'true'
-          buttonText: Button
-          dateTimeFormat: MMMM dd, y 'at' ttt
-          header: Created
-          id: a3ede757-c069-4052-a3f2-7743156c4eeb
-          index: 2
-          isVisible: true
-          linkTarget: _blank
-          minWidth: 15
-          minWidthUnit: '%'
-          onButtonClick: null
-          renderAs: date
-          width: '15'
-          widthUnit: '%'
-        - accessor: updatedAt
-          allowSortBy: 'true'
-          buttonText: Button
-          dateTimeFormat: MMMM dd, y 'at' ttt
-          header: Updated
-          id: 028f2b0a-d015-420a-b833-5009ca0fa830
-          index: 3
-          isVisible: true
-          linkTarget: _blank
-          minWidth: 15
-          minWidthUnit: '%'
-          onButtonClick: null
-          renderAs: date
-          width: '15'
-          widthUnit: '%'
-        - accessor: ''
-          allowSortBy: '{{true}}'
-          buttonText: Edit
-          dateTimeFormat: MMMM dd, y 'at' ttt
-          header: Actions
-          id: 9c754210-6b00-4aeb-8978-ea5dab2d57b6
-          index: 6
-          isVisible: true
-          minWidth: 15
-          minWidthUnit: '%'
-          onButtonClick:
-            function:
-              ref: e8af3fa7-99f2-445a-bc7e-c9a9e26dfafd
-          renderAs: button
-          width: '15'
-          widthUnit: '%'
-        - accessor: key
-          allowSortBy: 'true'
-          buttonText: Button
-          dateTimeFormat: MMMM dd, y 'at' ttt
-          header: key
-          id: cb8b079f-221a-4135-a416-354d8b976002
-          index: 0
-          isVisible: false
-          linkTarget: _blank
-          minWidth: 15
-          minWidthUnit: '%'
-          onButtonClick: null
-          renderAs: default
-          width: 69
-          widthUnit: '%'
-        - accessor: value
-          allowSortBy: 'true'
-          buttonText: Button
-          dateTimeFormat: MMMM dd, y 'at' ttt
-          header: value
-          id: 9202fc34-3481-413d-a457-0feeae94b43a
-          index: 4
-          isVisible: false
-          linkTarget: _blank
-          minWidth: 15
-          minWidthUnit: '%'
-          onButtonClick: null
-          renderAs: default
-          width: 0
-          widthUnit: '%'
-        - accessor: ''
-          allowSortBy: '{{true}}'
-          buttonText: Delete
-          dateTimeFormat: MMMM dd, y 'at' ttt
-          header: ''
-          id: 50d666d6-4639-44f1-8f49-893addb1e955
-          isVisible: true
-          minWidth: 15
-          minWidthUnit: '%'
-          onButtonClick:
-            function:
-              ref: a125e03b-ec04-417a-8369-22526f5b5709
-          renderAs: button
-          width: '15'
-          widthUnit: '%'
-      data: getPublishedPosts.data
-      height: 256px
-      top: '24'
-      width: 100%
+      width: '1'
+      height: 100%
+      layoutStyle: VERTICAL_STACK
+      padding: '0'
+      boxShadow: '0'
+      distributeContent: between
   e046d384-2fcd-4361-9183-abb70b0f73a9:
     type: BUTTON
     name: outlineButton1
@@ -2640,13 +2876,35 @@ nodes:
     properties:
       action:
         actionType: CALL_SERVER_FUNCTION
-        code: |-
+        code: >-
           const posts = await $kv.list()
 
-          return posts.sort((a, b) => (b.value.date > a.value.date ? 1 : -1))
+
+          const sortedPosts = posts.sort((a, b) => (b.value.date > a.value.date
+          ? 1 : -1))
+
+
+          return sortedPosts
+            .map((d) => {
+              return {
+                url: {{$app.baseURL}} + `/post/${d.key}`,
+                date: d.value.date,
+                title: `${d.value.title}`,
+              }
+            })
+            .sort()
         targetNode:
           ref: a49123eb-2413-4c07-8249-687ac02c8786
       runOnPageLoad: true
+  e781d407-b389-4652-9878-e890dbbec2bf:
+    type: FUNCTION
+    name: deleteDraft
+    properties:
+      action:
+        key: '{{$props.key}}'
+        targetNode:
+          ref: 9fb5b18f-e398-470d-9a19-031425edbefc
+        actionType: DELETE_RECORD
   e8148ba6-f2b3-491c-9e47-e57de5d6d93c:
     type: CONTAINER
     name: container9
@@ -2690,18 +2948,6 @@ nodes:
         3. Deploy your application.
       renderMode: markdown
       verticalAlign: top
-  e8af3fa7-99f2-445a-bc7e-c9a9e26dfafd:
-    type: FUNCTION
-    name: editRowPublished
-    properties:
-      action:
-        actionType: CALL_CLIENT_FUNCTION
-        code: |-
-          const id = {{ dataTable3.selectedRow.key }}
-
-          await redirect(id)
-        targetNode:
-          ref: com.dynaboard.globals:tsclient
   f15ed1c8-b662-412b-a955-22de51c6db03:
     type: COMPONENT
     name: banner
@@ -2727,14 +2973,14 @@ nodes:
     type: BUTTON
     name: saveButton
     properties:
-      backgroundColor: yellow.600
+      backgroundColor: yellow.500
       fontSize: md
       isEnabled: '{{titleInput.value && dateInput.value && bodyInput.value}} '
       onClick:
         function:
           ref: 04cb2e7d-986c-4cc6-b4d9-d4b7d98f1789
       text: Save Draft
-      textColor: text.primary
+      textColor: '#000000FF'
       top: '5'
       variant: ghostButton
   f654be52-07ee-44ad-a0b5-365f41b904db:
@@ -2795,123 +3041,25 @@ nodes:
         }
       top: NaN
       width: 100%
-  f7d5e9db-8b41-4363-b895-de99056603ce:
-    type: DATA_TABLE
-    name: dataTable1
+  f9c63695-a040-4939-b7b9-5b1f9dcb5dc0:
+    type: FUNCTION
+    name: handleEdit
     properties:
-      autoColumns: false
-      columns:
-        - accessor: value.title
-          allowSortBy: 'true'
-          buttonText: Button
-          dateTimeFormat: MMMM dd, y 'at' ttt
-          header: Title
-          id: 5b6a9ed6-4271-4976-ae6c-42f5d1438c30
-          index: 1
-          isVisible: true
-          linkTarget: _blank
-          minWidth: '40'
-          minWidthUnit: '%'
-          onButtonClick: null
-          renderAs: default
-          width: '40'
-          widthUnit: '%'
-        - accessor: createdAt
-          allowSortBy: 'true'
-          buttonText: Button
-          dateTimeFormat: MMMM dd, y 'at' ttt
-          header: Created
-          id: a3ede757-c069-4052-a3f2-7743156c4eeb
-          index: 2
-          isVisible: true
-          linkTarget: _blank
-          minWidth: '15'
-          minWidthUnit: '%'
-          onButtonClick: null
-          renderAs: date
-          width: '15'
-          widthUnit: '%'
-        - accessor: updatedAt
-          allowSortBy: 'true'
-          buttonText: Button
-          dateTimeFormat: MMMM dd, y 'at' ttt
-          header: Updated
-          id: 028f2b0a-d015-420a-b833-5009ca0fa830
-          index: 3
-          isVisible: true
-          linkTarget: _blank
-          minWidth: 15
-          minWidthUnit: '%'
-          onButtonClick: null
-          renderAs: date
-          width: '15'
-          widthUnit: '%'
-        - accessor: ''
-          allowSortBy: '{{true}}'
-          buttonText: Edit
-          dateTimeFormat: MMMM dd, y 'at' ttt
-          header: Actions
-          id: 9c754210-6b00-4aeb-8978-ea5dab2d57b6
-          index: 6
-          isVisible: true
-          minWidth: 15
-          minWidthUnit: '%'
-          onButtonClick:
-            function:
-              ref: 569ac839-8194-4691-ab6f-64cf543e910c
-          renderAs: button
-          width: '15'
-          widthUnit: '%'
-        - accessor: ''
-          allowSortBy: '{{true}}'
-          buttonText: Delete
-          dateTimeFormat: MMMM dd, y 'at' ttt
-          header: ''
-          id: b64f4f98-60cb-4f1f-9678-258a795756a8
-          index: 5
-          isVisible: true
-          minWidth: 15
-          minWidthUnit: '%'
-          onButtonClick:
-            function:
-              ref: 8acbb508-8d23-4178-aca9-41c09bf09bdd
-          renderAs: button
-          width: '15'
-          widthUnit: '%'
-        - accessor: key
-          allowSortBy: 'true'
-          buttonText: Button
-          dateTimeFormat: MMMM dd, y 'at' ttt
-          header: key
-          id: cb8b079f-221a-4135-a416-354d8b976002
-          index: 0
-          isVisible: false
-          linkTarget: _blank
-          minWidth: 15
-          minWidthUnit: '%'
-          onButtonClick: null
-          renderAs: default
-          width: 69
-          widthUnit: '%'
-        - accessor: value
-          allowSortBy: 'true'
-          buttonText: Button
-          dateTimeFormat: MMMM dd, y 'at' ttt
-          header: value
-          id: 9202fc34-3481-413d-a457-0feeae94b43a
-          index: 4
-          isVisible: false
-          linkTarget: _blank
-          minWidth: 15
-          minWidthUnit: '%'
-          onButtonClick: null
-          renderAs: default
-          width: 0
-          widthUnit: '%'
-      data: getPosts.data
-      height: 256px
-      top: '4'
-      width: 100%
+      action:
+        code: |-
+          setTimeout(() => {
+            if (!preventDefault.value) {
+              redirect($props.key)
+            }
+          }, 200)
+        targetNode:
+          ref: com.dynaboard.globals:tsclient
+        actionType: CALL_CLIENT_FUNCTION
+  fb788cfa-7fb3-40c6-bd3d-91c7193f3905:
+    type: LOCAL_VARIABLE
+    name: preventDefault
+    properties:
+      value: 'false'
   fd9b7b92-97cc-4070-a681-5af58373c8fb:
     type: COMPONENT/f15ed1c8-b662-412b-a955-22de51c6db03
     name: banner1
@@ -2924,6 +3072,25 @@ nodes:
           If you do not configure your **admin** account, anyone will be able to
           sign into your account and have administrative access to all of your
           blog posts data.
+  fe5cb190-84fa-4e0f-abd9-d4ea3c25d8d1:
+    type: FUNCTION
+    name: handleDelete
+    properties:
+      action:
+        code: |-
+          const isPublished = $props.status === "Published"
+
+          if (isPublished) {
+            await deletePublished()
+          } else {
+            await deleteDraft()
+          }
+        targetNode:
+          ref: com.dynaboard.globals:tsclient
+        actionType: CALL_CLIENT_FUNCTION
+      onSuccess:
+        function:
+          ref: cc250f66-34ad-4483-b1bc-b982c7b9ab2b
   ffd61630-619f-4180-a7cb-cbecc161e2b5:
     type: CONTAINER
     name: container1
