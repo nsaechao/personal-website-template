@@ -20,6 +20,8 @@ nodes:
           orderKey: Zv
         - nodeID: cd3ed80c-7110-4580-87dd-60f7eee642e3
           orderKey: a0
+        - nodeID: 62bd28d8-7744-4282-a48b-2dda5292f7a2
+          orderKey: Zu
       config:
         - nodeID: bd0e5ad4-74ff-4366-b4dd-098767afa5d6
           orderKey: a0
@@ -152,6 +154,14 @@ nodes:
       boxShadow: '0'
       borderRadius: '0'
       distributeContent: end
+  04a047d1-6b64-4d0a-95ef-ac4d52c51e1d:
+    type: TEXT
+    name: message
+    properties:
+      width: auto
+      height: 100%
+      value: '{{$props.message}} {{$props.user ? ''•'' : ''''}}'
+      color: text.muted
   04cb2e7d-986c-4cc6-b4d9-d4b7d98f1789:
     type: FUNCTION
     name: handleSave
@@ -200,9 +210,12 @@ nodes:
           orderKey: a0G
         - nodeID: 9c5b8f70-327d-4e3e-a22b-5701f6550fb0
           orderKey: a0
+        - nodeID: 81f2d9d8-9806-485b-9a67-1f0cdb6e1a55
+          orderKey: a1G
+        - nodeID: 0a6eab1d-b3b1-4fe6-9837-49c7d1cbe65d
+          orderKey: a1V
     properties:
       layoutStyle: VERTICAL_STACK
-      spacing: '30'
       title: About
       alignContent: center
       headerComponent: COMPONENT/9e2730fa-8aff-4461-a581-7f106b1f0714
@@ -221,6 +234,175 @@ nodes:
       onSuccess:
         function:
           ref: 05d1eeb9-cf12-48f5-b40b-d3fc803899e8
+  0a6eab1d-b3b1-4fe6-9837-49c7d1cbe65d:
+    type: TEXT
+    name: text2
+    properties:
+      height: fit
+      left: NaN
+      renderMode: markdown
+      styles: |-
+        /* Colors */
+        :root {
+          --dynaboard-text-color: #333333;
+          --dynaboard-link-color: #ff0000;
+          --dynaboard-code-color: #f3f4f6;
+          --dynaboard-background-color: #f8f8f8;
+        }
+
+        /* Body */
+        body {
+          font-family: "Segoe UI", sans-serif;
+          color: var(--dynaboard-text-color);
+          background-color: var(--dynaboard-background-color);
+          margin: 0;
+          padding: 0;
+        }
+
+        /* Headings */
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+          font-family: "Segoe UI", sans-serif;
+          color: var(--dynaboard-text-color);
+          font-weight: 600;
+          line-height: 1.2;
+          margin-top: 24px;
+          margin-bottom: 16px;
+        }
+
+        h1 {
+          font-size: 32px;
+        }
+
+        h2 {
+          font-size: 24px;
+        }
+
+        h3 {
+          font-size: 20px;
+        }
+
+        h4 {
+          font-size: 18px;
+        }
+
+        h5 {
+          font-size: 16px;
+        }
+
+        h6 {
+          font-size: 14px;
+        }
+
+        /* Links */
+        a {
+          color: var(--dynaboard-link-color);
+          text-decoration: none;
+          font-weight: 600;
+        }
+
+        a:hover {
+          text-decoration: underline;
+        }
+
+        /* Lists */
+        ul {
+          margin: 0;
+          padding: 0;
+          list-style-type: disc;
+        }
+
+        ol {
+          margin: 0;
+          padding: 0;
+          list-style-type: decimal;
+        }
+
+        li {
+          margin: 8px 0px 8px 24px;
+        }
+
+        /* Blockquotes */
+        blockquote {
+          margin: 0;
+          padding: 16px;
+          background-color: var(--dynaboard-code-color);
+          border-left: 4px solid var(--dynaboard-link-color);
+          color: var(--dynaboard-text-color);
+          font-style: italic;
+        }
+
+        /* Code */
+        code {
+          background-color: var(--dynaboard-code-color);
+          font-family: "Segoe UI Mono", monospace;
+          font-size: 14px;
+          padding: 2px 4px;
+        }
+
+        pre {
+          background-color: var(--dynaboard-code-color);
+          font-family: "Segoe UI Mono", monospace;
+          font-size: 14px;
+          padding: 16px;
+          overflow-x: auto;
+          border-radius: 4px;
+        }
+
+        /* Tables */
+        table {
+          border-collapse: collapse;
+          width: 100%;
+        }
+
+        td,
+        th {
+          border: 1px solid #e5e5e5;
+          padding: 8px;
+          text-align: left;
+        }
+
+        th {
+          font-weight: 600;
+          background-color: var(--dynaboard-code-color);
+          color: var(--dynaboard-text-color);
+        }
+
+        /* Images */
+        img {
+          max-width: 100%;
+          height: auto;
+          display: block;
+          margin: 24px auto;
+        }
+      top: NaN
+      value: >-
+        ## Skills
+
+
+        - [Skill 1]
+
+        - [Skill 2]
+
+        - [Skill 3]
+
+
+        ## Interests/Hobbies
+
+
+        - [Interest/Hobby 1]
+
+        - [Interest/Hobby 2]
+
+
+        Feel free to contact me at [Your Email] for any inquiries or
+        collaborations.
+      verticalAlign: top
+      width: 100.00%
   0f00f6b5-6fb2-4618-8e06-4843fcdfb862:
     type: FUNCTION
     name: deletePublished
@@ -1038,56 +1220,6 @@ nodes:
 
 
         ## Work Experience
-
-
-        ### [Current/Previous Job Title], [Current/Previous Company]
-
-
-        - [Job Duty 1]
-
-        - [Job Duty 2]
-
-        - [Job Duty 3]
-
-
-        ### [Previous Job Title], [Previous Company]
-
-
-        - [Job Duty 1]
-
-        - [Job Duty 2]
-
-        - [Job Duty 3]
-
-
-        ## Skills
-
-
-        - [Skill 1]
-
-        - [Skill 2]
-
-        - [Skill 3]
-
-        - [Skill 4]
-
-        - [Skill 5]
-
-
-        ## Interests/Hobbies
-
-
-        - [Interest/Hobby 1]
-
-        - [Interest/Hobby 2]
-
-        - [Interest/Hobby 3]
-
-        - [Interest/Hobby 4]
-
-
-        Feel free to contact me at [Your Email] for any inquiries or
-        collaborations.
       verticalAlign: top
       width: 100.00%
   502ad6de-6f1f-402b-bcfb-fd7103e6e0cd:
@@ -1252,6 +1384,148 @@ nodes:
         }
       value: '### {{titleInput.value}}'
       width: '1'
+  502be7cf-a4e3-4e7e-9993-664b5e11eb30:
+    type: INLINE_REACT
+    name: icon
+    properties:
+      top: NaN
+      left: NaN
+      width: 24px
+      height: 100.00%
+      styles: |-
+        ::component {
+          .icon {
+            background-color: {{$app.colorMode}}.{{$props.state === 'success' ? 'green.500' : $props.state === 'error' ? 'red.500' : 'background.levelThree'}};
+          }
+        }
+
+        ::wrapper {
+        }
+      props: |-
+        {
+          color: "black",
+          state: {{$props.state}}
+        }
+      componentSource: |-
+        return function Icon({
+          color,
+          state,
+        }: {
+          color: string
+          state?: "success" | "error"
+        }) {
+          const checkIcon = (
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 16 16"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <g clip-path="url(#clip0_3_2728)">
+                <path
+                  fill-rule="evenodd"
+                  clip-rule="evenodd"
+                  d="M12.31 4.15979C12.5267 4.33102 12.5635 4.64546 12.3923 4.8621L7.16618 11.4742C7.05109 11.6243 6.90212 11.745 6.73141 11.8266C6.55907 11.9089 6.36956 11.9488 6.17865 11.9431C5.98774 11.9374 5.80096 11.8862 5.63383 11.7938C5.46869 11.7024 5.32747 11.5733 5.22162 11.4172L3.59128 9.10339C3.43222 8.87766 3.48627 8.56572 3.712 8.40666C3.93773 8.24761 4.24967 8.30166 4.40872 8.52739L6.04894 10.8552C6.0666 10.8815 6.09019 10.9034 6.11796 10.9188C6.14574 10.9341 6.17678 10.9426 6.20851 10.9436C6.24024 10.9445 6.27174 10.9379 6.30038 10.9242C6.32903 10.9105 6.35399 10.8902 6.37319 10.8649L6.37899 10.8573L11.6077 4.24201C11.779 4.02537 12.0934 3.98856 12.31 4.15979Z"
+                  fill={color}
+                />
+                <path
+                  fill-rule="evenodd"
+                  clip-rule="evenodd"
+                  d="M2.34315 2.34254C3.84344 0.842244 5.87827 -0.000610352 8 -0.000610352C10.1217 -0.000610352 12.1566 0.842244 13.6569 2.34254C15.1571 3.84283 16 5.87766 16 7.99939C16 10.1211 15.1571 12.156 13.6569 13.6562C12.1566 15.1565 10.1217 15.9994 8 15.9994C5.87827 15.9994 3.84344 15.1565 2.34315 13.6562C0.842855 12.156 0 10.1211 0 7.99939C0 5.87766 0.842855 3.84283 2.34315 2.34254ZM8 0.99939C6.14348 0.99939 4.36301 1.73689 3.05025 3.04964C1.7375 4.3624 1 6.14287 1 7.99939C1 9.85591 1.7375 11.6364 3.05025 12.9491C4.36301 14.2619 6.14349 14.9994 8 14.9994C9.85652 14.9994 11.637 14.2619 12.9497 12.9491C14.2625 11.6364 15 9.85591 15 7.99939C15 6.14287 14.2625 4.3624 12.9497 3.04964C11.637 1.73689 9.85652 0.99939 8 0.99939Z"
+                  fill={color}
+                />
+              </g>
+              <defs>
+                <clipPath id="clip0_3_2728">
+                  <rect width="16" height="16" fill="white" />
+                </clipPath>
+              </defs>
+            </svg>
+          )
+
+          const errorIcon = (
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 16 16"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <g clip-path="url(#clip0_3_2728)">
+                <path
+                  fill-rule="evenodd"
+                  clip-rule="evenodd"
+                  d="M12.7897 3.91628C12.9849 3.721 12.9849 3.40442 12.7896 3.20917C12.5943 3.01392 12.2778 3.01394 12.0825 3.20921L7.99877 7.29341L3.91408 3.20917C3.71881 3.01392 3.40223 3.01394 3.20697 3.20921C3.01172 3.40448 3.01174 3.72107 3.20701 3.91632L7.2917 8.00055L3.2088 12.0839C3.01355 12.2792 3.01357 12.5958 3.20884 12.791C3.40412 12.9863 3.7207 12.9862 3.91595 12.791L7.99885 8.70762L12.0827 12.791C12.278 12.9863 12.5946 12.9862 12.7898 12.791C12.9851 12.5957 12.985 12.2791 12.7898 12.0839L8.70592 8.00048L12.7897 3.91628ZM8.70592 8.00048L7.99877 7.29341L7.2917 8.00055L7.99885 8.70762L8.70592 8.00048Z"
+                  fill={color}
+                />
+                <path
+                  d="M8.70592 8.00048L7.99877 7.29341L7.2917 8.00055L7.99885 8.70762L8.70592 8.00048Z"
+                  fill={color}
+                />
+                <path
+                  fill-rule="evenodd"
+                  clip-rule="evenodd"
+                  d="M2.34315 2.34254C3.84344 0.842244 5.87827 -0.000610352 8 -0.000610352C10.1217 -0.000610352 12.1566 0.842244 13.6569 2.34254C15.1571 3.84283 16 5.87766 16 7.99939C16 10.1211 15.1571 12.156 13.6569 13.6562C12.1566 15.1565 10.1217 15.9994 8 15.9994C5.87827 15.9994 3.84344 15.1565 2.34315 13.6562C0.842855 12.156 0 10.1211 0 7.99939C0 5.87766 0.842855 3.84283 2.34315 2.34254ZM8 0.99939C6.14348 0.99939 4.36301 1.73689 3.05025 3.04964C1.7375 4.3624 1 6.14287 1 7.99939C1 9.85591 1.7375 11.6364 3.05025 12.9491C4.36301 14.2619 6.14349 14.9994 8 14.9994C9.85652 14.9994 11.637 14.2619 12.9497 12.9491C14.2625 11.6364 15 9.85591 15 7.99939C15 6.14287 14.2625 4.3624 12.9497 3.04964C11.637 1.73689 9.85652 0.99939 8 0.99939Z"
+                  fill={color}
+                />
+              </g>
+              <defs>
+                <clipPath id="clip0_3_2728">
+                  <rect width="16" height="16" fill="white" />
+                </clipPath>
+              </defs>
+            </svg>
+          )
+
+          const defaultIcon = (
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 16 16"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                fill-rule="evenodd"
+                clip-rule="evenodd"
+                d="M10.8272 3.04366L3.94485 9.94212L3.11612 12.8917L6.06589 12.0637L12.9482 5.16447C13.0286 5.0841 13.074 4.97478 13.074 4.86114C13.074 4.74756 13.0289 4.63863 12.9487 4.55827L11.4332 3.0437C11.3529 2.96335 11.2438 2.91818 11.1302 2.91818C11.0166 2.91818 10.9076 2.96342 10.8272 3.04366ZM10.2212 2.43747C10.4623 2.19644 10.7893 2.06104 11.1302 2.06104C11.4711 2.06104 11.7981 2.19643 12.0392 2.43743L13.5546 3.95201C13.7956 4.19311 13.9312 4.52021 13.9312 4.86114C13.9312 5.20191 13.7959 5.52874 13.5551 5.76981M13.5551 5.76981L6.59334 12.7487C6.5413 12.8008 6.47668 12.8387 6.40574 12.8586L2.61288 13.9232C2.46369 13.9651 2.30353 13.9232 2.19398 13.8136C2.08443 13.704 2.04256 13.5438 2.08447 13.3946L3.1499 9.60264C3.16972 9.53207 3.20732 9.46777 3.25909 9.41587L10.2212 2.43747"
+                fill={color}
+              />
+            </svg>
+          )
+
+          const style = {
+            height: "100%",
+            width: "100%",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }
+
+          const iconStyle = {
+            width: "24px",
+            height: "24px",
+            borderRadius: "99999px",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }
+
+          return (
+            <div className="container" style={style}>
+              <div className="icon" style={iconStyle}>
+                {state === "success"
+                  ? checkIcon
+                  : state === "error"
+                  ? errorIcon
+                  : defaultIcon}
+              </div>
+            </div>
+          )
+        }
+      parentNodeID: 62bd28d8-7744-4282-a48b-2dda5292f7a2
+      overrideInsertPosition: true
   50758d27-1a38-4b15-8a48-3fc6fa6268ef:
     type: CONTAINER
     name: draftHeader
@@ -1393,11 +1667,87 @@ nodes:
       width: '1'
       verticalAlign: bottom
       height: 100%
+  62bd28d8-7744-4282-a48b-2dda5292f7a2:
+    type: COMPONENT
+    name: CustomStatusFeedEntry
+    tags:
+      - feed
+    slots:
+      canvas:
+        - nodeID: 502be7cf-a4e3-4e7e-9993-664b5e11eb30
+          orderKey: a0
+        - nodeID: 6594030e-f0f6-4679-9daf-61caf939b2d4
+          orderKey: a1
+        - nodeID: f1803fe5-7362-4204-a8f1-0d2daab71337
+          orderKey: a2
+    properties:
+      height: 32px
+      minWidth: 320px
+      width: 100%
+      layoutStyle: HORIZONTAL_STACK
+      overflow: visible
+      spacing: '12'
+      styles: |-
+        ::component {
+          .iteree:not(:last-of-type) & {
+            _after {
+              content: ' ';
+              display: block;
+              height: 16px;
+              width: 1px;
+              margin-left: 12px;
+              background-color: {{$app.colorMode}}.text.primary;
+              opacity: 0.3;
+            }
+          }
+        }
+
+        ::wrapper {
+        }
+      props:
+        - id: 2094f9e0-b387-4ca7-9606-4e123c1bd580
+          key: message
+          description: ''
+          propType: string
+          defaultValue: Approved for lending account
+        - id: 7a2b73d0-5047-4451-b74b-5fbc39f35c72
+          key: date
+          description: ''
+          propType: string
+          defaultValue: ''
+        - id: 049f6e9d-bd69-4720-afbb-40d6e093e338
+          key: user
+          description: ''
+          propType: string
+          defaultValue: ''
+        - id: 5ac9ee6f-730b-44c1-92d5-1e266e5db37e
+          key: state
+          description: Can be empty if indeterminate or incomplete, 'success', or 'error'
+          propType: string
+          defaultValue: ''
   65097c5b-eef4-44ce-8f60-89e99fbb2516:
     type: LOCAL_VARIABLE
     name: icon
     properties:
       value: ''''''
+  6594030e-f0f6-4679-9daf-61caf939b2d4:
+    type: CONTAINER
+    name: messageContainer
+    slots:
+      canvas:
+        - nodeID: 04a047d1-6b64-4d0a-95ef-ac4d52c51e1d
+          orderKey: a0
+        - nodeID: 96024a94-2fd2-4a3e-9b70-06fedc256133
+          orderKey: a1
+    properties:
+      width: '1'
+      height: 100%
+      overflow: hidden
+      layoutStyle: HORIZONTAL_STACK
+      padding: '0'
+      spacing: '4'
+      backgroundColor: transparent
+      boxShadow: '0'
   683ef21d-c39b-486c-abd2-d99c4d8fa080:
     type: FUNCTION
     name: publishPost
@@ -1704,6 +2054,35 @@ nodes:
         # {{getPost.data?.title ?? ''}}
         `{{getPost.data?.date || ' '}}`
       width: 100%
+  81f2d9d8-9806-485b-9a67-1f0cdb6e1a55:
+    type: ITERATOR
+    name: statusFeed1
+    properties:
+      width: 100%
+      height: fit
+      data: |-
+        [
+          {
+            message: 'Job Title 1',
+            user: 'Company 1',
+            date: 'Start Date - End Date'
+          },
+          {
+            message: 'Job Title 2',
+            user: 'Company2',
+            state: 'success',
+            date: 'Start Date - End Date'
+          },
+          {
+            message: 'Job Title 3',
+            user: 'Company 3',
+            state: 'success',
+            date: 'Start Date - End Date'
+          },
+        ]
+      component: COMPONENT/62bd28d8-7744-4282-a48b-2dda5292f7a2
+      backgroundColor: transparent
+      boxShadow: '0'
   8560b5ab-b06d-4ce1-8ef4-6878fb97e94d:
     type: CONTAINER
     name: container2
@@ -2093,6 +2472,15 @@ nodes:
       type: image
       url: '{{profileImageURL.value}}'
       width: 150px
+  96024a94-2fd2-4a3e-9b70-06fedc256133:
+    type: TEXT
+    name: user
+    properties:
+      width: '1'
+      height: 100%
+      value: '{{$props.user}}'
+      fontWeight: bold
+      textOverflow: ellipsis
   97c50cb7-8330-4b3a-a116-c9589ea24fb4:
     type: PAGE
     name: login
@@ -2969,6 +3357,14 @@ nodes:
         element.styles {
         }
       width: 800px
+  f1803fe5-7362-4204-a8f1-0d2daab71337:
+    type: TEXT
+    name: date
+    properties:
+      width: auto
+      height: 100%
+      value: '{{$props.date}}'
+      color: text.muted
   f2daa312-9ba1-4301-a07c-34a236f09950:
     type: BUTTON
     name: saveButton
