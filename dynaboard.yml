@@ -79,7 +79,7 @@ nodes:
                 {
                   'session/user/email': {
                     $in: [
-                      'ny@dynaboard.com',
+                      'your_email@example.com',
                     ],
                   },
                 },
