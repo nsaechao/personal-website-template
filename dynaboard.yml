@@ -26,6 +26,8 @@ nodes:
           orderKey: a1
         - nodeID: 219b4b2e-e558-422c-ba54-4043768facad
           orderKey: a0V
+        - nodeID: 2e47a3b3-bfb1-4cd1-8b75-59cfba61aeae
+          orderKey: Zt
       config:
         - nodeID: bd0e5ad4-74ff-4366-b4dd-098767afa5d6
           orderKey: a0
@@ -77,7 +79,7 @@ nodes:
                 {
                   'session/user/email': {
                     $in: [
-                      'your_email@example.com',
+                      'ny@dynaboard.com',
                     ],
                   },
                 },
@@ -94,6 +96,12 @@ nodes:
     properties:
       fontSize: 30px
       height: 16
+      styles: |-
+        ::component {
+        }
+
+        ::wrapper {
+        }
       textAlign: center
       value: '{{$props.icon}}'
       width: 12
@@ -110,6 +118,8 @@ nodes:
       backgroundColor: transparent
       boxShadow: '0'
       distributeContent: center
+      gridColumnGap: '4'
+      gridRowGap: '4'
       height: 106px
       layoutStyle: VERTICAL_STACK
       left: '5'
@@ -127,6 +137,7 @@ nodes:
       backgroundColor: text.accent
       fontSize: 4xl
       height: 48px
+      hoverBackgroundColor: ''
       isEnabled: '{{true}}'
       isLoading: '{{false}}'
       isVisible: '{{true}}'
@@ -144,9 +155,9 @@ nodes:
           line-height: 1em;
         }
       text: ''
+      textColor: white
       tooltip: Create new post
       top: NaN
-      variant: solid
       width: 48px
   03f76d0a-a878-41e1-807c-902214056575:
     type: CONTAINER
@@ -159,6 +170,8 @@ nodes:
       borderRadius: '0'
       boxShadow: '0'
       distributeContent: end
+      gridColumnGap: '4'
+      gridRowGap: '4'
       height: 100%
       layoutStyle: HORIZONTAL_STACK
       overflow: hidden
@@ -213,6 +226,12 @@ nodes:
       height: fit
       padding: '0'
       spacing: '0'
+      styles: |-
+        ::component {
+        }
+
+        ::wrapper {
+        }
       width: 100%
   05d1eeb9-cf12-48f5-b40b-d3fc803899e8:
     type: FUNCTION
@@ -220,7 +239,7 @@ nodes:
     properties:
       action:
         actionType: NAVIGATE_TO_PAGE
-        path: /post/{{$currentPage.params.id}}
+        path: /post/{{edit.params.id}}
         target: _self
         targetNode:
           ref: com.dynaboard.globals:browser
@@ -256,6 +275,7 @@ nodes:
       footerComponent: COMPONENT/b3cd226b-aa75-4c3f-ab88-48917a5be4c3
       headerComponent: COMPONENT/9e2730fa-8aff-4461-a581-7f106b1f0714
       layoutStyle: VERTICAL_STACK
+      spacing: '16'
       title: About
   074c5e7f-ab35-4e5c-b137-23b989e7c32b:
     type: FUNCTION
@@ -267,7 +287,7 @@ nodes:
       action:
         actionType: CALL_SERVER_FUNCTION
         code: |-
-          const id = {{$currentPage.params.id}}
+          const id = {{edit.params.id}}
 
           await $kv.delete(id)
         targetNode:
@@ -447,6 +467,12 @@ nodes:
       fontSize: sm
       height: fit
       renderMode: markdown
+      styles: |-
+        ::component {
+        }
+
+        ::wrapper {
+        }
       top: '2'
       value: >-
         ### Copyright
@@ -491,7 +517,7 @@ nodes:
       action:
         actionType: CALL_CLIENT_FUNCTION
         code: |-
-          const postID = {{ $currentPage.params.id }}
+          const postID = {{ edit.params.id }}
 
           const draftData = await loadDraft(postID)
 
@@ -560,9 +586,18 @@ nodes:
     properties:
       backgroundColor: transparent
       boxShadow: '0'
+      gridColumnGap: '4'
+      gridRowGap: '4'
       height: fit
       layoutStyle: HORIZONTAL_STACK
       padding: '0'
+      spacing: '16'
+      styles: |-
+        ::component {
+        }
+
+        ::wrapper {
+        }
       width: 100%
       wrapContent: wrap
   181cad3b-ac89-45e2-a947-4636f8eb4620:
@@ -595,12 +630,15 @@ nodes:
       alignContent: center
       borderRadius: 8px
       boxShadow: '0'
+      gridColumnGap: '4'
+      gridRowGap: '4'
       height: fit
       layoutStyle: HORIZONTAL_STACK
       onClick:
         function:
           ref: 6b5a5f58-1257-4517-acff-a83769595888
       padding: '0'
+      spacing: '16'
       styles: |-
         ::component {
           border-width: 2px;
@@ -639,7 +677,7 @@ nodes:
       text: '{{titleMode.value === ''preview'' ? ''Edit'' : ''Save''}}'
       textColor: text.primary
       top: '5'
-      variant: ghostButton
+      variant: outline
       width: 103px
   219b4b2e-e558-422c-ba54-4043768facad:
     type: COMPONENT
@@ -660,6 +698,8 @@ nodes:
           orderKey: a0
     properties:
       alignContent: center
+      gridColumnGap: '4'
+      gridRowGap: '4'
       height: fit
       layoutStyle: VERTICAL_STACK
       padding: '16'
@@ -689,6 +729,7 @@ nodes:
           id: 8bf2c3d2-d3fc-4ac2-acd8-9699009b241a
           key: lastUpdated
           propType: string
+      spacing: '8'
       styles: |-
         ::component {
         }
@@ -717,12 +758,22 @@ nodes:
     properties:
       height: fit
       renderMode: markdown
+      styles: |-
+        ::component {
+        }
+
+        ::wrapper {
+        }
       top: '2'
-      value: |-
+      value: >-
         ### Where are my blog posts stored?
-        All of your blog posts are stored in the **K/V Store resource**.
+
+        All of your blog posts are stored in the built-in **K/V Store
+        resource**.
+
 
         **Draft** posts are stored in the `post-draft` keyspace.
+
 
         **Published** posts are stored in the `post-prod` keyspace.
       verticalAlign: top
@@ -775,6 +826,12 @@ nodes:
     properties:
       height: 100%
       renderMode: markdown
+      styles: |-
+        ::component {
+        }
+
+        ::wrapper {
+        }
       value: '{{$props.date}}'
       width: fit
   2a5bd5b5-20e5-4cb6-b1b2-25bfb76e9f8f:
@@ -788,9 +845,18 @@ nodes:
       backgroundColor: '{{ $props.status === "Published" ? "purple.200" : "yellow.200" }}'
       borderRadius: '0'
       boxShadow: '0'
+      gridColumnGap: '4'
+      gridRowGap: '4'
       height: 100%
       overflow: hidden
       padding: '0'
+      spacing: '16'
+      styles: |-
+        ::component {
+        }
+
+        ::wrapper {
+        }
       width: 60px
   2dd0d6ae-ff62-4b5e-8fcb-41e8994817c0:
     type: TEXT
@@ -798,9 +864,107 @@ nodes:
     properties:
       fontSize: 30px
       height: 16
+      styles: |-
+        ::component {
+        }
+
+        ::wrapper {
+        }
       textAlign: center
       value: '{{$props.icon}}'
       width: 12
+  2e47a3b3-bfb1-4cd1-8b75-59cfba61aeae:
+    type: COMPONENT
+    name: CustomConfirmationDialog
+    tags:
+      - dialog
+    slots:
+      canvas:
+        - nodeID: 66c5d486-4519-4e76-87b6-bbf53fd005c8
+          orderKey: a0
+        - nodeID: 79dcc58c-45b5-4428-a497-eb85a3ffd793
+          orderKey: a1
+        - nodeID: 964e24a6-8000-41f0-950d-8c31ade7df18
+          orderKey: a2
+      functions:
+        - nodeID: 39d748ef-73eb-49dd-93de-1b3b7e3d2f24
+          orderKey: a0
+        - nodeID: b36df2c4-47fb-4672-b3c9-9258a25eb142
+          orderKey: a1
+        - nodeID: 67556c02-c304-4985-9d27-4a7b554cb873
+          orderKey: a2
+        - nodeID: 47a770b8-fb50-4bbb-a4e2-2a16b8d1ce01
+          orderKey: a3
+    properties:
+      backgroundColor: background.levelOne
+      borderRadius: 4px
+      props:
+        - id: 5fdd565a-9183-40b8-bce2-b955a0b09ae5
+          key: headerText
+          displayName: Header Text
+          description: The header text of the dialog
+          propType: string
+          defaultValue: Send invoice
+        - id: cec4cfe2-e3a3-49ab-9883-e1283311d1f5
+          key: bodyText
+          displayName: Body Text
+          description: The body text of the dialog
+          propType: string
+          defaultValue: Send invoice for $123.45 to the customer?
+        - id: 2871e1f1-0fe7-43f9-bd94-9d5f1b64c47e
+          key: primaryButtonLabel
+          displayName: Primary Button Label
+          description: The label of the primary button
+          propType: string
+          defaultValue: Confirm
+        - id: de6e9cec-65f6-43f6-abbd-c23b7e72615c
+          key: primaryButtonColor
+          displayName: Primary Button Color
+          description: The background color of the primary button
+          propType: color
+          defaultValue: text.accent
+        - id: e68bb88a-8fff-4ccd-95e0-60b0c189a589
+          key: secondaryButtonLabel
+          displayName: Secondary Button Label
+          description: The label of the secondary button
+          propType: string
+          defaultValue: Cancel
+        - id: 1eff0426-ce92-4440-9d05-518a5810d9f0
+          key: secondaryButtonColor
+          displayName: Secondary Button Color
+          description: The background color of the secondary button
+          propType: color
+          defaultValue: text.muted
+        - id: 51a57310-80d3-429a-a60d-fb391618c4c0
+          key: onSubmit
+          displayName: On Submit
+          description: The function to call when the submit button is clicked
+          propType: function
+          defaultValue: null
+        - id: 817a17ed-83f5-43e8-a803-fecb2f8e34cf
+          key: onCancel
+          displayName: On Cancel
+          description: The function to call when the cancel button is clicked
+          propType: function
+          defaultValue: null
+        - id: 90b269ea-bf43-4d1b-a224-738c610b1778
+          key: onClose
+          displayName: On Close
+          description: The function to call when the close button is clicked
+          propType: function
+          defaultValue:
+            ref: 39d748ef-73eb-49dd-93de-1b3b7e3d2f24
+      layoutStyle: VERTICAL_STACK
+      spacing: '0'
+      styles: |-
+        ::component {
+          box-shadow: 0 0 0 1px {{$app.colorMode === 'dark' ? 'rgba(255, 255, 255, 0.2)' : 'rgba(0, 0, 0, 0.2)'}};
+        }
+
+        ::wrapper {
+        }
+      minHeight: fit-content
+      overflow: visible
   2fcc4817-2046-4516-981d-7c91771a42e1:
     type: CONTAINER
     name: iconContainer
@@ -811,6 +975,8 @@ nodes:
     properties:
       backgroundColor: brand.banner.icon
       borderRadius: 50%
+      gridColumnGap: '4'
+      gridRowGap: '4'
       height: 20px
       layoutStyle: HORIZONTAL_STACK
       left: '0'
@@ -880,6 +1046,12 @@ nodes:
     properties:
       height: fit
       renderMode: markdown
+      styles: |-
+        ::component {
+        }
+
+        ::wrapper {
+        }
       value: >-
         # Personal Website Template
 
@@ -984,6 +1156,32 @@ nodes:
       width: >-
         {{`${Math.min(parseInt($currentPage.maxWidth), $app.viewportWidth) -
         (parseInt($currentPage.padding) * 2)}px`}}
+  39d748ef-73eb-49dd-93de-1b3b7e3d2f24:
+    type: FUNCTION
+    name: closeDialog
+    properties:
+      action:
+        isVisible: true
+        isEnabled: true
+        tooltip: ''
+        top: '1'
+        left: '1'
+        width: 128px
+        minWidth: none
+        maxWidth: none
+        height: 32px
+        minHeight: none
+        maxHeight: none
+        overflow: auto
+        overflowX: auto
+        overflowY: auto
+        styles: |-
+          element.styles {
+          }
+        objectFit: cover
+        targetNode:
+          ref: com.dynaboard.globals:browser
+        actionType: CLOSE_DIALOG
   3a1b3282-abb1-4b82-ac24-b1c2d34350d4:
     type: FUNCTION
     name: onLoad
@@ -1009,13 +1207,38 @@ nodes:
     name: deleteButton
     properties:
       backgroundColor: red.600
+      borderColor: purple.700
       fontSize: md
       height: 100%
+      hoverBackgroundColor: ''
       onClick:
         function:
           ref: 2382de36-0ddc-4b14-a0c4-36db67532bf3
+      styles: |-
+        ::component {
+        }
+
+        ::wrapper {
+        }
       text: Delete
+      textColor: white
+      variant: solidButton
       width: 60px
+  3dda2ef1-25cf-4a0e-913c-53fefcf14295:
+    type: TEXT
+    name: bodyText
+    properties:
+      isVisible: '{{true}}'
+      isEnabled: '{{true}}'
+      top: '6'
+      left: '2'
+      width: '1'
+      height: fit-content
+      value: '{{$props.bodyText}}'
+      showExternalIndicator: '{{false}}'
+      fontSize: sm
+      verticalAlign: top
+      color: text.muted
   3e078026-3a93-41d0-a504-b93c205ed53a:
     type: BUTTON
     name: outlineButton11
@@ -1060,9 +1283,18 @@ nodes:
     properties:
       boxShadow: '0'
       distributeContent: between
+      gridColumnGap: '4'
+      gridRowGap: '4'
       height: 100%
       layoutStyle: VERTICAL_STACK
       padding: '0'
+      spacing: '16'
+      styles: |-
+        ::component {
+        }
+
+        ::wrapper {
+        }
       width: '1'
   3e7802e3-bfc1-42e4-8823-c17fec536536:
     type: FUNCTION
@@ -1173,7 +1405,18 @@ nodes:
             },
           },
         ]
+      gridColumnGap: '4'
+      gridRowGap: '4'
       layoutStyle: VERTICAL_STACK
+      padding: '16'
+      spacing: '16'
+      styles: |-
+        ::component {
+        }
+
+        ::wrapper {
+        }
+      title: README
   3fb48859-8dbd-462f-862f-fef24ea2ca3f:
     type: FUNCTION
     name: loadProd
@@ -1217,6 +1460,20 @@ nodes:
         }
       value: '{{$props.descriptionText}}'
       width: 100%
+  47a770b8-fb50-4bbb-a4e2-2a16b8d1ce01:
+    type: FUNCTION
+    name: submitHandler
+    properties:
+      action:
+        code: |-
+          if ($props.onSubmit) {
+            await $props.onSubmit()
+          }
+
+          await closeHandler()
+        targetNode:
+          ref: com.dynaboard.globals:tsclient
+        actionType: CALL_CLIENT_FUNCTION
   484476ad-5f4e-4183-a8f2-04ba1dfccc66:
     type: COMPONENT
     name: postItem
@@ -1228,6 +1485,8 @@ nodes:
         - nodeID: a7628013-93f5-4970-bf2a-d957377996e5
           orderKey: a0
     properties:
+      gridColumnGap: '4'
+      gridRowGap: '4'
       height: fit
       layoutStyle: VERTICAL_STACK
       props:
@@ -1249,6 +1508,12 @@ nodes:
           key: url
           propType: string
       spacing: '0'
+      styles: |-
+        ::component {
+        }
+
+        ::wrapper {
+        }
       width: 100%
   48cf3df4-1abc-45a5-ac94-f2ab425561d4:
     type: TEXT
@@ -1257,6 +1522,12 @@ nodes:
       height: fit
       left: NaN
       renderMode: markdown
+      styles: |-
+        ::component {
+        }
+
+        ::wrapper {
+        }
       top: NaN
       value: |
         ## Getting Started
@@ -1288,7 +1559,7 @@ nodes:
       action:
         actionType: CALL_SERVER_FUNCTION
         code: |-
-          const id = {{ $currentPage.params.id }}
+          const id = {{ edit.params.id }}
 
           const title = {{ titleInput.value }}
 
@@ -1487,7 +1758,6 @@ nodes:
     type: TEXT
     name: markdown1
     properties:
-      height: 48px
       isVisible: '{{titleMode.value === ''preview''}}'
       renderMode: markdown
       styles: |-
@@ -1817,6 +2087,8 @@ nodes:
     properties:
       borderRadius: '0'
       boxShadow: '0'
+      gridColumnGap: '4'
+      gridRowGap: '4'
       height: fitt
       layoutStyle: HORIZONTAL_STACK
       overflow: hidden
@@ -1860,6 +2132,23 @@ nodes:
       top: NaN
       value: '{{version.value ?? ''New''}}'
       width: 80px
+  58a610de-8d76-41f2-af26-879267481350:
+    type: BUTTON
+    name: secondaryButton
+    properties:
+      isVisible: '{{true}}'
+      isEnabled: '{{true}}'
+      top: '12'
+      left: '5'
+      width: 80px
+      height: 28px
+      onClick:
+        function:
+          ref: 67556c02-c304-4985-9d27-4a7b554cb873
+      text: '{{$props.secondaryButtonLabel}}'
+      backgroundColor: '{{$props.secondaryButtonColor}}'
+      variant: outline
+      isLoading: '{{false}}'
   5a2c55be-6c76-4e24-a02c-bb1964f68820:
     type: CONTAINER
     name: container6
@@ -1872,7 +2161,7 @@ nodes:
       backgroundColor: transparent
       borderRadius: '0'
       boxShadow: '0'
-      height: 32px
+      height: fit-content
       isVisible: '{{ mode.value === "edit" }}'
       layoutStyle: HORIZONTAL_STACK
       left: NaN
@@ -1911,12 +2200,34 @@ nodes:
         }
       top: NaN
       width: '1'
+  5bb8a599-1f52-4f86-960c-0277c003d8b8:
+    type: BUTTON
+    name: primaryButton
+    properties:
+      isVisible: '{{true}}'
+      isEnabled: '{{true}}'
+      top: '12'
+      left: '8'
+      width: 107px
+      height: 28px
+      onClick:
+        function:
+          ref: 47a770b8-fb50-4bbb-a4e2-2a16b8d1ce01
+      text: '{{$props.primaryButtonLabel}}'
+      backgroundColor: '{{$props.primaryButtonColor}}'
+      isLoading: '{{false}}'
   5cd6fa5d-a0ba-4bf2-aa86-622973afba15:
     type: TEXT
     name: markdown1111
     properties:
       height: fit
       renderMode: markdown
+      styles: |-
+        ::component {
+        }
+
+        ::wrapper {
+        }
       top: '2'
       value: >
         ## Blogging / Posting
@@ -2065,6 +2376,45 @@ nodes:
       padding: '0'
       spacing: '4'
       width: '1'
+  66c5d486-4519-4e76-87b6-bbf53fd005c8:
+    type: CONTAINER
+    name: headerContainer
+    slots:
+      canvas:
+        - nodeID: ba450229-b988-4168-a24c-234f4683ea0b
+          orderKey: a0
+        - nodeID: ae0b4a8d-2c41-4133-8053-6d05c191492c
+          orderKey: a1
+    properties:
+      width: 320px
+      height: 42px
+      layoutStyle: HORIZONTAL_STACK
+      gridRowGap: '0'
+      gridColumnGap: '0'
+      padding: 4px 8px 4px 16px
+      spacing: '0'
+      backgroundColor: none
+      boxShadow: '0'
+      borderRadius: '0'
+      distributeContent: between
+      alignContent: center
+      parentNodeID: 2e47a3b3-bfb1-4cd1-8b75-59cfba61aeae
+      clientX: 660.3671875
+      clientY: 611.2890625
+  67556c02-c304-4985-9d27-4a7b554cb873:
+    type: FUNCTION
+    name: cancelHandler
+    properties:
+      action:
+        code: |-
+          if ($props.onCancel) {
+            await $props.onCancel()
+          }
+
+          await closeHandler()
+        targetNode:
+          ref: com.dynaboard.globals:tsclient
+        actionType: CALL_CLIENT_FUNCTION
   683ef21d-c39b-486c-abd2-d99c4d8fa080:
     type: FUNCTION
     name: publishPost
@@ -2075,7 +2425,7 @@ nodes:
       action:
         actionType: CALL_SERVER_FUNCTION
         code: |-
-          const id = {{ $currentPage.params.id }}
+          const id = {{ edit.params.id }}
 
           const title = {{ titleInput.value }}
 
@@ -2100,7 +2450,6 @@ nodes:
           ref: 683ef21d-c39b-486c-abd2-d99c4d8fa080
       text: Publish
       top: '5'
-      variant: solid
   6b5a5f58-1257-4517-acff-a83769595888:
     type: FUNCTION
     name: openPreviewDialog
@@ -2150,17 +2499,17 @@ nodes:
       top: NaN
       type: date
       width: 121px
+      height: 32px
   6db81f72-567c-4545-bb9d-cad1ab75aaf4:
     type: INPUT
     name: iconInput
     properties:
       isVisible: '{{titleMode.value === ''edit''}}'
       label: ''
-      labelStyle: top
       left: NaN
       top: NaN
-      type: text
       width: 32px
+      height: 32px
   6dc45113-0b1c-49d0-9043-290efe4a6e43:
     type: SPINNER
     name: spinner1
@@ -2252,16 +2601,46 @@ nodes:
   780c952b-f33a-49e6-b7cb-307edaa13e47:
     type: LOCAL_VARIABLE
     name: version
+  79dcc58c-45b5-4428-a497-eb85a3ffd793:
+    type: CONTAINER
+    name: bodyContainer
+    slots:
+      canvas:
+        - nodeID: 3dda2ef1-25cf-4a0e-913c-53fefcf14295
+          orderKey: a0
+    properties:
+      top: NaN
+      left: NaN
+      width: 100%
+      height: '1'
+      layoutStyle: HORIZONTAL_STACK
+      padding: 0 16px 16px
+      spacing: '0'
+      backgroundColor: none
+      boxShadow: '0'
+      parentNodeID: 2e47a3b3-bfb1-4cd1-8b75-59cfba61aeae
+      clientX: 669.37109375
+      clientY: 642.27734375
   7a8f613b-e890-4a91-984c-a70dbc8fc686:
     type: BUTTON
     name: signOutButton
     properties:
       backgroundColor: red.600
+      borderColor: purple.700
+      hoverBackgroundColor: ''
       isEnabled: 'true'
       onClick:
         function:
           ref: 8769a1bc-472f-448f-9d10-099495ce1058
+      styles: |-
+        ::component {
+        }
+
+        ::wrapper {
+        }
       text: Sign Out
+      textColor: white
+      variant: solidButton
       width: 100%
   7d399af5-a221-4280-b9f6-ef030a417fa2:
     type: CONTAINER
@@ -2477,6 +2856,14 @@ nodes:
           },
         ]
       height: fit
+      padding: '16'
+      spacing: '16'
+      styles: |-
+        ::component {
+        }
+
+        ::wrapper {
+        }
       width: 100%
   8560b5ab-b06d-4ce1-8ef4-6878fb97e94d:
     type: CONTAINER
@@ -2489,9 +2876,18 @@ nodes:
       backgroundColor: '{{ $props.status === "Published" ? "purple.200" : "yellow.200" }}'
       borderRadius: '0'
       boxShadow: '0'
+      gridColumnGap: '4'
+      gridRowGap: '4'
       height: 100%
       overflow: hidden
       padding: '0'
+      spacing: '16'
+      styles: |-
+        ::component {
+        }
+
+        ::wrapper {
+        }
       width: 60px
   86fe6bc9-9144-4c91-b3fd-53c697b0c344:
     type: CONTAINER
@@ -2673,7 +3069,7 @@ nodes:
       action:
         actionType: CALL_SERVER_FUNCTION
         code: |
-          return await $kv.get({{ $currentPage.params.id }})
+          return await $kv.get({{ post.params.id }})
         targetNode:
           ref: a49123eb-2413-4c07-8249-687ac02c8786
   8f70829d-5e43-403c-b938-3a27a786bef4:
@@ -2709,6 +3105,11 @@ nodes:
           isVisible: false
           orderKey: a0
           title: R E A D M E
+        - title: Preview Admin
+          id: 30251d4a-c106-4332-ab40-2d92cdfcb8dc
+          accessor: 8fc1f328-05f1-4194-8d40-a7cd6d857c2a
+          isVisible: true
+          orderKey: a5
       width: fit
   8fc1f328-05f1-4194-8d40-a7cd6d857c2a:
     type: PAGE
@@ -2901,6 +3302,8 @@ nodes:
       backgroundColor: transparent
       borderRadius: 0px
       boxShadow: '0'
+      gridColumnGap: '4'
+      gridRowGap: '4'
       height: fit
       layoutStyle: HORIZONTAL_STACK
       left: NaN
@@ -2909,7 +3312,6 @@ nodes:
           ref: a7628013-93f5-4970-bf2a-d957377996e5
       overflow: hidden
       padding: '0'
-      spacing: 16px
       styles: |-
         ::component {
           cursor: pointer;
@@ -2925,12 +3327,11 @@ nodes:
     properties:
       isVisible: '{{titleMode.value === ''edit''}}'
       label: ''
-      labelStyle: top
       left: NaN
       placeholder: Add a title here
       top: NaN
-      type: text
       width: '1'
+      height: 32px
   958a79bf-4f44-4b1b-832a-d30603e0f2c0:
     type: MEDIA
     name: media1
@@ -2956,6 +3357,31 @@ nodes:
       textOverflow: ellipsis
       value: '{{$props.user}}'
       width: '1'
+  964e24a6-8000-41f0-950d-8c31ade7df18:
+    type: CONTAINER
+    name: actionsContainer
+    slots:
+      canvas:
+        - nodeID: 58a610de-8d76-41f2-af26-879267481350
+          orderKey: a0
+        - nodeID: 5bb8a599-1f52-4f86-960c-0277c003d8b8
+          orderKey: a1
+    properties:
+      top: NaN
+      left: NaN
+      width: 100%
+      height: fit-content
+      overflow: visible
+      layoutStyle: HORIZONTAL_STACK
+      padding: 0 16px 16px
+      spacing: '8'
+      backgroundColor: none
+      boxShadow: '0'
+      borderRadius: ''
+      distributeContent: end
+      parentNodeID: 2e47a3b3-bfb1-4cd1-8b75-59cfba61aeae
+      clientX: 697.5234375
+      clientY: 681.8671875
   97c50cb7-8330-4b3a-a116-c9589ea24fb4:
     type: PAGE
     name: login
@@ -3083,6 +3509,7 @@ nodes:
       backgroundColor: text.accent
       fontSize: 4xl
       height: 48px
+      hoverBackgroundColor: ''
       isEnabled: '{{true}}'
       isLoading: '{{false}}'
       isVisible: '{{true}}'
@@ -3100,20 +3527,30 @@ nodes:
           line-height: 1em;
         }
       text: ''
+      textColor: white
       tooltip: Create new post
       top: NaN
-      variant: solid
       width: 48px
   a3fbc4b1-1a9a-40c9-8647-f92082726776:
     type: BUTTON
     name: deleteButton
     properties:
       backgroundColor: red.600
+      borderColor: purple.700
       fontSize: md
       height: 100%
+      hoverBackgroundColor: ''
       onClick:
         function: {}
+      styles: |-
+        ::component {
+        }
+
+        ::wrapper {
+        }
       text: Delete
+      textColor: white
+      variant: solidButton
       width: 60px
   a4108a86-40ea-4df7-ab6f-87fb3483da84:
     type: FUNCTION
@@ -3145,8 +3582,30 @@ nodes:
     properties:
       color: blue.400
       height: 100%
+      styles: |-
+        ::component {
+        }
+
+        ::wrapper {
+        }
       value: '{{$props.title}}'
       width: '1'
+  ae0b4a8d-2c41-4133-8053-6d05c191492c:
+    type: BUTTON
+    name: closeButton
+    properties:
+      left: NaN
+      width: 28px
+      height: 28px
+      onClick:
+        function:
+          ref: b36df2c4-47fb-4672-b3c9-9258a25eb142
+      text: ''
+      leftIcon: Cross1Icon
+      textColor: text.muted
+      backgroundColor: transparent
+      variant: ghost
+      top: NaN
   af5059eb-64f1-4eea-8d43-aa0c2c0a1868:
     type: COMPONENT
     name: internalCard
@@ -3158,6 +3617,8 @@ nodes:
         - nodeID: 4b279397-0495-4b35-b000-efb064010677
           orderKey: a0
     properties:
+      gridColumnGap: '4'
+      gridRowGap: '4'
       height: 126px
       maxHeight: 320px
       maxWidth: 420px
@@ -3184,6 +3645,7 @@ nodes:
           id: 2d9f8cc2-b6f4-451f-8e56-5031561c5b1f
           key: redirectURL
           propType: string
+      spacing: '8'
       styles: |-
         element.styles {
         }
@@ -3270,13 +3732,31 @@ nodes:
     name: markdown2
     properties:
       fontWeight: ''
-      height: 48px
       isVisible: '{{titleMode.value === ''preview''}}'
       left: NaN
       renderMode: markdown
+      styles: |-
+        ::component {
+        }
+
+        ::wrapper {
+        }
+      textAlign: center
       top: NaN
       value: '### {{iconInput.value}}'
-      width: fit
+      width: 32px
+  b36df2c4-47fb-4672-b3c9-9258a25eb142:
+    type: FUNCTION
+    name: closeHandler
+    properties:
+      action:
+        code: |-
+          if ($props.onClose) {
+            await $props.onClose()
+          }
+        targetNode:
+          ref: com.dynaboard.globals:tsclient
+        actionType: CALL_CLIENT_FUNCTION
   b3cd226b-aa75-4c3f-ab88-48917a5be4c3:
     type: COMPONENT
     name: footer
@@ -3285,8 +3765,17 @@ nodes:
         - nodeID: e6d5c127-8034-4290-aecf-e18f9aced70c
           orderKey: a0
     properties:
+      gridColumnGap: '4'
+      gridRowGap: '4'
       height: 32px
       layoutStyle: HORIZONTAL_STACK
+      spacing: '8'
+      styles: |-
+        ::component {
+        }
+
+        ::wrapper {
+        }
   b3dcb319-8a63-429e-a23f-3783662a43e9:
     type: FUNCTION
     name: openDeleteDialog
@@ -3335,11 +3824,21 @@ nodes:
     name: signOutButton
     properties:
       backgroundColor: red.600
+      borderColor: purple.700
+      hoverBackgroundColor: ''
       isEnabled: '{{getUserEmail.data}}'
       onClick:
         function:
           ref: 24571e40-5e3e-47df-a79e-2ec5ed139253
+      styles: |-
+        ::component {
+        }
+
+        ::wrapper {
+        }
       text: Sign Out
+      textColor: white
+      variant: solidButton
       width: 100%
   b5c1df39-e388-40c7-adbb-d02eb28d19c5:
     type: CONTAINER
@@ -3353,6 +3852,8 @@ nodes:
     properties:
       borderRadius: '0'
       boxShadow: '0'
+      gridColumnGap: '4'
+      gridRowGap: '4'
       height: fitt
       layoutStyle: HORIZONTAL_STACK
       overflow: hidden
@@ -3373,8 +3874,27 @@ nodes:
     properties:
       color: text.muted
       height: 100%
+      styles: |-
+        ::component {
+        }
+
+        ::wrapper {
+        }
       value: '{{$props.lastUpdated}}'
       width: fit
+  ba450229-b988-4168-a24c-234f4683ea0b:
+    type: TEXT
+    name: titleText
+    properties:
+      isVisible: '{{true}}'
+      isEnabled: '{{true}}'
+      top: '3'
+      left: '2'
+      width: 267px
+      height: 29px
+      value: '{{$props.headerText}}'
+      showExternalIndicator: '{{false}}'
+      fontWeight: '700'
   bd0e5ad4-74ff-4366-b4dd-098767afa5d6:
     type: CONFIG
     name: profileImageURL
@@ -3436,11 +3956,12 @@ nodes:
       backgroundColor: transparent
       boxShadow: '0'
       distributeContent: end
-      height: 80px
+      height: 32px
       layoutStyle: HORIZONTAL_STACK
       padding: '0'
       spacing: '8'
       width: 100%
+      overflow: visible
   c2bb2efe-10be-4cb4-b2fb-72b495bb424c:
     type: TEXT
     name: text1
@@ -3471,12 +3992,15 @@ nodes:
       alignContent: center
       borderRadius: 8px
       boxShadow: '0'
+      gridColumnGap: '4'
+      gridRowGap: '4'
       height: fit
       layoutStyle: HORIZONTAL_STACK
       onClick:
         function:
           ref: f9c63695-a040-4939-b7b9-5b1f9dcb5dc0
       padding: '0'
+      spacing: '16'
       styles: |-
         ::component {
           border-width: 2px;
@@ -3517,6 +4041,8 @@ nodes:
       borderRadius: '0'
       boxShadow: '0'
       distributeContent: end
+      gridColumnGap: '4'
+      gridRowGap: '4'
       height: 100%
       layoutStyle: HORIZONTAL_STACK
       overflow: hidden
@@ -3549,6 +4075,12 @@ nodes:
       height: fit
       padding: '0'
       spacing: '0'
+      styles: |-
+        ::component {
+        }
+
+        ::wrapper {
+        }
       width: 100%
   c6c218f0-82ff-45a8-9375-9611dbc3590b:
     type: RESOURCE/KVSTORE
@@ -3562,7 +4094,6 @@ nodes:
       height: 400px
       isVisible: '{{ mode.value === "edit" }}'
       label: ''
-      labelStyle: top
       placeholder: Start typing your blog post here...
       styles: |
         ::component {
@@ -3597,10 +4128,13 @@ nodes:
       alignContent: center
       backgroundColor: brand.banner.background
       borderRadius: 6px
+      gridColumnGap: '4'
+      gridRowGap: '4'
       height: 100%
       layoutStyle: HORIZONTAL_STACK
       overflow: hidden
       padding: 8px
+      spacing: '16'
       styles: |-
         element.styles {
           border: 1px solid;
@@ -3613,6 +4147,12 @@ nodes:
     properties:
       color: text.muted
       height: 100%
+      styles: |-
+        ::component {
+        }
+
+        ::wrapper {
+        }
       value: '{{$props.lastUpdated}}'
       width: fit
   cc250f66-34ad-4483-b1bc-b982c7b9ab2b:
@@ -3658,6 +4198,8 @@ nodes:
           orderKey: a0
     properties:
       alignContent: center
+      gridColumnGap: '4'
+      gridRowGap: '4'
       height: fit
       layoutStyle: VERTICAL_STACK
       padding: '16'
@@ -3692,6 +4234,7 @@ nodes:
           id: f55efb10-61e3-4fc9-8314-2c86b8d8465b
           key: deleteCallback
           propType: function
+      spacing: '8'
       styles: |-
         ::component {
         }
@@ -3812,9 +4355,18 @@ nodes:
     properties:
       boxShadow: '0'
       distributeContent: between
+      gridColumnGap: '4'
+      gridRowGap: '4'
       height: 100%
       layoutStyle: VERTICAL_STACK
       padding: '0'
+      spacing: '16'
+      styles: |-
+        ::component {
+        }
+
+        ::wrapper {
+        }
       width: '1'
   e046d384-2fcd-4361-9183-abb70b0f73a9:
     type: BUTTON
@@ -3928,6 +4480,12 @@ nodes:
     properties:
       height: 100%
       renderMode: markdown
+      styles: |-
+        ::component {
+        }
+
+        ::wrapper {
+        }
       top: '2'
       value: >-
         1. Configure your admin account by going to the **Settings** panel and
@@ -3950,6 +4508,8 @@ nodes:
           orderKey: a0
     properties:
       borderRadius: 6px
+      gridColumnGap: '4'
+      gridRowGap: '4'
       height: 44px
       layoutStyle: HORIZONTAL_STACK
       props:
@@ -3958,6 +4518,7 @@ nodes:
           id: 0e62928a-c82f-40c8-9117-6efed9e29219
           key: message
           propType: string
+      spacing: '8'
       styles: |-
         element.styles {
         }
@@ -3983,7 +4544,7 @@ nodes:
       text: Save Draft
       textColor: '#000000FF'
       top: '5'
-      variant: ghostButton
+      variant: outline
   f654be52-07ee-44ad-a0b5-365f41b904db:
     type: CONTAINER
     name: cardContainer
@@ -3998,6 +4559,8 @@ nodes:
       backgroundColor: background.levelTwo
       borderRadius: 6px
       boxShadow: '0'
+      gridColumnGap: '4'
+      gridRowGap: '4'
       gridRowHeight: '16'
       gridRows: '0'
       height: '32'
@@ -4007,6 +4570,7 @@ nodes:
           ref: 4b279397-0495-4b35-b000-efb064010677
       overflow: visible
       padding: '8'
+      spacing: '16'
       styles: |-
         element.styles {
           border: 1px solid {{$app.colorMode === 'dark' ? 'rgba(255, 255, 255, 0.2)' : 'rgba(0, 0, 0, 0.2)'}};
